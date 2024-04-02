@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/google/go-jsonnet
+    rev: v0.20.0
+    hooks:
+      - id: jsonnet-format
+        args:
+          - --in-place
+          - --indent
+          - "2"
+          - --string-style
+          - d
+          - --comment-style
+          - s
+          - --pad-arrays
+          - --pad-objects
