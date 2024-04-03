@@ -11,23 +11,22 @@
   // this section of the config.
   labels: [
     // Labels - Orgs
-    { name: "Org" },
     {
-      name: "Org/Hashgreen",
+      name: "Hashgreen",
       color: {
         background: "#006633",
         text: "#f1f5ec",
       },
     },
     {
-      name: "Org/CodeGreen",
+      name: "CodeGreen",
       color: {
         background: "#ff7537",
         text: "#ffffff",
       },
     },
     {
-      name: "Org/OpenCGT",
+      name: "OpenCGT",
       color: {
         background: "#fb4c2f",
         text: "#ffffff",
@@ -54,7 +53,7 @@
         ],
       },
       actions: {
-        labels: [ "Org/Hashgreen" ],
+        labels: [ "Hashgreen" ],
       },
     },
     {
@@ -66,7 +65,7 @@
         ],
       },
       actions: {
-        labels: [ "Org/CodeGreen" ],
+        labels: [ "CodeGreen" ],
       },
     },
     {
@@ -74,7 +73,7 @@
         to: "hhsu@opencgt.com",
       },
       actions: {
-        labels: [ "Org/OpenCGT" ],
+        labels: [ "OpenCGT" ],
       },
     },
 
@@ -113,6 +112,7 @@
       filter: {
         or: [
           { from: "no_reply@swingvy.com" },
+          { from: "support@github.com" },
         ],
       },
       actions: {
@@ -153,6 +153,7 @@
           { from: "webmaster@taishinbank.com.tw" },
           // CTBC Bank
           { from: "bank.csc@inib.ctbcbank.com" },
+          { from: "bank.csc@inedm.ctbcbank.com" },
           // Fubon Bank
           { from: "mbank@dfm.taipeifubon.com.tw" },
           { from: "TSB@mhurcv.taishinbank.com.tw" },
@@ -173,7 +174,9 @@
           { from: "account-update@amazon.com" },
           { from: "numerai@numer.ai" },
           { from: "notifications@github.com" },
+          { from: "noreply@github.com" },
           { from: "jira@codegreenlabs.atlassian.net" },
+          { replyto: "cloud-support@confluent.io" },
         ],
       },
       actions: {
