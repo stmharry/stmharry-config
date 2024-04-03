@@ -40,6 +40,7 @@
       },
     },
     { name: "Statement" },
+    { name: "Calendar" },
   ],
   rules: [
     // Orgs
@@ -123,6 +124,16 @@
     // Unimportant
     {
       filter: {
+        has: "invite.ics",
+      },
+      actions: {
+        markImportant: false,
+        archive: true,
+        labels: [ "Calendar" ],
+      },
+    },
+    {
+      filter: {
         or: [
           // Google
           { from: "payments-noreply@google.com" },
@@ -139,6 +150,7 @@
           { from: "service@idealcard.com.tw" },
           // Uber
           { from: "noreply@uber.com" },
+          { from: "noreply@uberegui.com" },
           // TW Mobile
           { from: "ebill@ebsmtp01.taiwanmobile.com" },
 
@@ -160,9 +172,9 @@
           { from: "service@mhu.taipeifubon.com.tw" },
           // E-Sun Bank
           { from: "NetbankService@esunbank.com" },
+          { from: "ESUNCARD@email.esunbank.com.tw" },
           { from: "Service@info.esunbank.com" },
           { from: "Service@msg.esunbank.com" },
-          { from: "ESUNCARD@email.esunbank.com.tw" },
           { from: "esunb2b@gibbhrcv.esunbank.com" },
           // DBS Bank
           { from: "no-reply@msg.dbs.com" },
@@ -177,6 +189,7 @@
           { from: "noreply@github.com" },
           { from: "jira@codegreenlabs.atlassian.net" },
           { replyto: "cloud-support@confluent.io" },
+          { from: "comments-noreply@docs.google.com" },
         ],
       },
       actions: {
