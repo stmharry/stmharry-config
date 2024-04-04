@@ -121,6 +121,20 @@
       },
     },
 
+    // Forward
+    {
+      filter: {
+        or: [
+          { from: "donotreplyAPAC@mail.rci.com" },
+          { from: "club365@mail.welcometoyourclub.com" },
+          { from: "info@email.atlantisbahamas.com" },
+        ],
+      },
+      actions: {
+        forward: "chelsea850416@gmail.com",
+      },
+    },
+
     // Unimportant
     {
       filter: {
@@ -163,12 +177,13 @@
           // TaiShin Bank
           { from: "richart@richart.tw" },
           { from: "webmaster@taishinbank.com.tw" },
+          { from: "TSB@mhurcv.taishinbank.com.tw" },
           // CTBC Bank
           { from: "bank.csc@inib.ctbcbank.com" },
           { from: "bank.csc@inedm.ctbcbank.com" },
           // Fubon Bank
           { from: "mbank@dfm.taipeifubon.com.tw" },
-          { from: "TSB@mhurcv.taishinbank.com.tw" },
+          { from: "ebank@dfm.taipeifubon.com.tw" },
           { from: "service@mhu.taipeifubon.com.tw" },
           // E-Sun Bank
           { from: "NetbankService@esunbank.com" },
