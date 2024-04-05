@@ -141,6 +141,7 @@
         has: "invite.ics",
       },
       actions: {
+        markSpam: false,
         markImportant: false,
         archive: true,
         labels: [ "Calendar" ],
@@ -217,6 +218,9 @@
     {
       filter: {
         or: [
+          { from: "newsletter@gbbcouncil.org" },
+          { from: "support@s.usa.experian.com" },
+          { from: "notifications@mvgx.com" },
           { list: "catchall@codegreen.org" },
           { to: "jason@codegreen.org" },
         ],
