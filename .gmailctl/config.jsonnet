@@ -40,45 +40,41 @@
       },
     },
     { name: "Statement" },
+    { name: "Crypto" },
     { name: "Calendar" },
   ],
   rules: [
-    // Orgs
+    // Organization
+
     {
       filter: {
-        or: [
-          { to: "stmharry@hashgreen.net" },
-          { to: "stmharry+prod@hashgreen.net" },
-          { to: "harry@hashgreen.net" },
-          { to: "h@hashgreen.net" },
-        ],
+        to: "@hashgreen.net",
       },
       actions: {
         labels: [ "Hashgreen" ],
       },
     },
+
     {
       filter: {
-        or: [
-          { to: "stmharry@codegreen.org" },
-          { to: "harry@codegreen.org" },
-          { to: "h@codegreen.org" },
-        ],
+        to: "@codegreen.org",
       },
       actions: {
         labels: [ "CodeGreen" ],
       },
     },
+
     {
       filter: {
-        to: "hhsu@opencgt.com",
+        to: "@opencgt.com",
       },
       actions: {
         labels: [ "OpenCGT" ],
       },
     },
 
-    // Important
+    // Important Topics
+
     {
       filter: {
         subject: "Green Card",
@@ -90,6 +86,22 @@
         labels: [ "Green Card" ],
       },
     },
+
+    {
+      filter: {
+        or: [
+          { from: "donotreplyAPAC@mail.rci.com" },
+          { from: "club365@mail.welcometoyourclub.com" },
+          { from: "info@email.atlantisbahamas.com" },
+        ],
+      },
+      actions: {
+        forward: "chelsea850416@gmail.com",
+      },
+    },
+
+    // Actions Needed
+
     {
       filter: {
         or: [
@@ -109,6 +121,9 @@
         labels: [ "Statement" ],
       },
     },
+
+    // Attention Needed
+
     {
       filter: {
         or: [
@@ -117,25 +132,28 @@
         ],
       },
       actions: {
+        markSpam: false,
         markImportant: true,
       },
     },
 
-    // Forward
     {
       filter: {
         or: [
-          { from: "donotreplyAPAC@mail.rci.com" },
-          { from: "club365@mail.welcometoyourclub.com" },
-          { from: "info@email.atlantisbahamas.com" },
+          { from: "no-reply@info.coinbase.com" },
+          { from: "noreply@mailer1.okx.com" },
+          { from: "noreply@mailer2.okx.com" },
+          { from: "support@ace.io" },
         ],
       },
       actions: {
-        forward: "chelsea850416@gmail.com",
+        markSpam: false,
+        labels: [ "Crypto" ],
       },
     },
 
-    // Unimportant
+    // Unimportant But Needs To Be Archived
+
     {
       filter: {
         has: "invite.ics",
@@ -145,8 +163,10 @@
         markImportant: false,
         archive: true,
         labels: [ "Calendar" ],
+        category: "updates",
       },
     },
+
     {
       filter: {
         or: [
@@ -215,6 +235,7 @@
     },
 
     // Spam
+
     {
       filter: {
         or: [
