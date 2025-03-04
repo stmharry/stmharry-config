@@ -1,4 +1,4 @@
-install: install-tmux
+install: install-tmux install-gmailctl
 
-install-tmux:
-	@make -C tmux
+install-%:
+	@make -C $*

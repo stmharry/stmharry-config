@@ -242,6 +242,7 @@
           { from: "newsletter@gbbcouncil.org" },
           { from: "support@s.usa.experian.com" },
           { from: "notifications@mvgx.com" },
+          { from: "edinburghvision@inf.ed.ac.uk" },
           { list: "catchall@codegreen.org" },
           { to: "jason@codegreen.org" },
         ],
