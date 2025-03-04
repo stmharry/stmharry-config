@@ -1,4 +1,4 @@
-install: install-configs install-homebrew-packages
+install: install-configs install-homebrew-packages install-oh-my-zsh
 
 # configs
 
@@ -19,7 +19,7 @@ install-configs: $(CONFIG_TARGETS)
 # homebrew
 
 install-homebrew:
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 HOMEBREW_TARGETS = \
 	install-homebrew-package-zsh \
@@ -29,3 +29,8 @@ install-homebrew-package-%:
 	brew install $*
 
 install-homebrew-packages: $(HOMEBREW_TARGETS)
+
+# zsh
+
+install-oh-my-zsh:
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
