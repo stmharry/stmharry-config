@@ -3,7 +3,8 @@ install: install-configs install-homebrew-packages
 # configs
 
 CONFIG_TARGETS = \
-	install-config-.zshrc
+	install-config-.zshrc \
+	install-config-Harry.json
 
 install-config-%:
 	@if [ -f "$(HOME)/$*" ]; then \
