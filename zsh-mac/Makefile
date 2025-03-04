@@ -1,4 +1,4 @@
-install: install-configs install-homebrew-packages 
+install: install-configs install-homebrew-packages
 
 # configs
 
@@ -22,7 +22,8 @@ install-homebrew:
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 HOMEBREW_TARGETS = \
-	install-homebrew-package-zsh
+	install-homebrew-package-zsh \
+	install-homebrew-package-neovim
 
 install-homebrew-package-%:
 	brew install $*
