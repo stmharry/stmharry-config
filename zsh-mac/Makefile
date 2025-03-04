@@ -23,7 +23,8 @@ install-homebrew:
 
 HOMEBREW_TARGETS = \
 	install-homebrew-package-zsh \
-	install-homebrew-package-neovim
+	install-homebrew-package-neovim \
+	install-homebrew-package-thefuck
 
 install-homebrew-package-%:
 	brew install $*
