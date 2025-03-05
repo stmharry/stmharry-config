@@ -1,16 +1,21 @@
+include ../utils.mk
+
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Linux)
+
 	INSTALL_TARGETS += \
 		install-apt-packages
 
 	APT_PACKAGES += \
+		golang-go \
 		neovim
 
 	PYTHON_PACKAGES += \
 		thefuck
 
 else ifeq ($(UNAME_S),Darwin)  # macOS
+
 	CONFIGS += \
 		Harry.json
 
@@ -19,6 +24,7 @@ else ifeq ($(UNAME_S),Darwin)  # macOS
 		install-homebrew-packages
 
 	HOMEBREW_PACKAGES += \
+		go \
 		neovim \
 		thefuck
 
@@ -27,19 +33,6 @@ endif
 ### UTILS
 
 SH_C = sh -c
-
-define copy-file
-	$(eval $@_SRC := $(1))
-	$(eval $@_DST := $(2))
-	$(eval $@_LOG_PREFIX := $(3))
-
-	if [ -f "$($@_DST)" ]; then \
-		echo "$($@_LOG_PREFIX) $($@_DST) already exists, not overwriting"; \
-	else \
-		echo "$($@_LOG_PREFIX) Copying $($@_SRC) to $($@_DST)"; \
-		mkdir -p $(dir $($@_DST)) && cp $($@_SRC) $($@_DST); \
-	fi
-endef
 
 ### INSTALL
 
@@ -60,6 +53,11 @@ install-config-%:
 	@$(call copy-file, $*, $(HOME)/$*, "[shell/config]")
 
 install-configs: $(addprefix install-config-, $(CONFIGS))
+
+update-config-%:
+	@$(call copy-file, $(HOME)/$*, $*, "[shell/config]", "true")
+
+update-configs: $(addprefix update-config-, $(CONFIGS))
 
 ### APT
 

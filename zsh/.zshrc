@@ -32,6 +32,13 @@ if [ -d "/opt/homebrew" ]; then
   eval "$(brew shellenv)"
 fi
 
+# go
+
+if [ -d "${HOME}/go" ]; then
+  export GOPATH="${HOME}/go"
+  export PATH="${GOPATH}/bin:${PATH}"
+fi
+
 # thefuck
 
 eval "$(thefuck --alias --enable-experimental-instant-mode)"

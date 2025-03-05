@@ -1,18 +1,31 @@
-GMAILCTL_DIR = $(HOME)/.gmailctl
-GMAILCTL_CONFIG_PATH = $(GMAILCTL_DIR)/config.jsonnet
+include ../utils.mk
 
-install: install-gmailctl install-config
+INSTALL_TARGETS += \
+	install-configs \
+	install-gmailctl
+
+install: $(INSTALL_TARGETS)
+
+### CONFIGS
+
+GMAILCTL_DIR = $(HOME)/.gmailctl
+
+CONFIGS += \
+	config.jsonnet
+
+install-config-%:
+	@$(call copy-file, $*, $(GMAILCTL_DIR)/$*, "[gmailctl/config]")
+
+install-configs: $(addprefix install-config-, $(CONFIGS))
+
+update-config-%:
+	@$(call copy-file, $(GMAILCTL_DIR)/$*, $*, "[gmailctl/config]", "true")
+
+update-configs: $(addprefix update-config-, $(CONFIGS))
+
+### GMAILCTL
 
 install-gmailctl:
 	@echo "[gmailctl] Installing gmailctl"; \
 		go install github.com/mbrt/gmailctl/cmd/gmailctl@latest; \
 		gmailctl init
-
-install-config:
-	@if [ -f "$(GMAILCTL_CONFIG_PATH)" ]; then \
-		echo "[gmailctl/config] $(GMAILCTL_CONFIG_PATH) already exists, not overwriting"; \
-	else \
-		echo "[gmailctl/config] Copying config.jsonnet to $(GMAILCTL_CONFIG_PATH)"; \
-		mkdir -p "$(GMAILCTL_DIR)" && \
-		cp config.jsonnet "$(GMAILCTL_CONFIG_PATH)"; \
-	fi
