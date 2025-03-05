@@ -1,8 +1,8 @@
 TARGETS += \
+	system \
 	zsh \
 	tmux \
-	astronvim \
-	gmailctl
+	astronvim
 
 install-%:
 	@make -C $* install
