@@ -9,6 +9,8 @@ ifeq ($(UNAME_S),Linux)
 
 	APT_PACKAGES += \
 		golang-go \
+		git \
+		git-delta \
 		neovim
 
 	PYTHON_PACKAGES += \
@@ -25,6 +27,8 @@ else ifeq ($(UNAME_S),Darwin)  # macOS
 
 	HOMEBREW_PACKAGES += \
 		go \
+		git \
+		git-delta \
 		neovim \
 		thefuck
 
