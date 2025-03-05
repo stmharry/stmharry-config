@@ -9,7 +9,7 @@ install: $(INSTALL_TARGETS)
 
 CONFIGS += \
 	.gitconfig \
-	.gitmessages.txt
+	.gitmessage.txt
 
 install-config-%:
 	@$(call copy-file, $*, $(HOME)/$*, "[git/config]")
