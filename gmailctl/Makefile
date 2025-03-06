@@ -10,11 +10,12 @@ install: $(INSTALL_TARGETS)
 
 GMAILCTL_DIR = $(HOME)/.gmailctl
 
+FORCE ?= false
 CONFIGS += \
 	config.jsonnet
 
 install-config-%:
-	@$(call copy-file, $*, $(GMAILCTL_DIR)/$*, "[gmailctl/config]")
+	@$(call copy-file, $*, $(GMAILCTL_DIR)/$*, "[gmailctl/config]", $(FORCE))
 
 install-configs: $(addprefix install-config-, $(CONFIGS))
 

@@ -11,11 +11,12 @@ install: $(INSTALL_TARGETS)
 
 TMUX_DIR = $(HOME)/.config/tmux
 
+FORCE ?= false
 CONFIGS += \
 	tmux.conf
 
 install-config-%:
-	@$(call copy-file, $*, $(TMUX_DIR)/$*, "[tmux/config]")
+	@$(call copy-file, $*, $(TMUX_DIR)/$*, "[tmux/config]", $(FORCE))
 
 install-configs: $(addprefix install-config-, $(CONFIGS))
 

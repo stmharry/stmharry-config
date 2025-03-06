@@ -47,6 +47,8 @@ install-config-%:
 
 install-configs: $(addprefix install-config-, $(CONFIGS))
 
+update-configs:
+
 ### APT
 
 APT = /usr/bin/apt

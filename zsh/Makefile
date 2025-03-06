@@ -11,11 +11,12 @@ install: $(INSTALL_TARGETS)
 
 ### CONFIGS
 
+FORCE ?= false
 CONFIGS += \
 	.zshrc
 
 install-config-%:
-	@$(call copy-file, $*, $(HOME)/$*, "[zsh/config]")
+	@$(call copy-file, $*, $(HOME)/$*, "[zsh/config]", $(FORCE))
 
 install-configs: $(addprefix install-config-, $(CONFIGS))
 
