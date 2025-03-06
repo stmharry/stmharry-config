@@ -50,4 +50,7 @@ alias ll="ls -alh"
 alias du="du -h"
 alias vim="nvim"
 
+alias f="fuck"
+alias ff="fuck --yeah"
+
 alias ssh-tw-ws="ssh -p 6999 chia@ap-gateway.stmharry.io"
