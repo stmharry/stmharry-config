@@ -43,7 +43,7 @@ install: $(INSTALL_TARGETS)
 ### CONFIGS
 
 install-config-%:
-	@$(call copy-file, $*, $(HOME)/$*, "[system/config]")
+	@$(call copy-file, $*, $(HOME)/$*, "[system/config]", $(FORCE))
 
 install-configs: $(addprefix install-config-, $(CONFIGS))
 

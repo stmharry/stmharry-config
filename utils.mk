@@ -18,10 +18,20 @@ define copy-dir
 	$(eval $@_LOG_PREFIX := $(3))
 	$(eval $@_FORCE := $(or $(4), false))
 
-	if [ "$($@_FORCE)" = "false" ] && [ -d "$($@_DST)" ]; then \
-		echo "$($@_LOG_PREFIX) $($@_DST) already exists, not overwriting"; \
-	else \
-		echo "$($@_LOG_PREFIX) Copying $($@_SRC) to $($@_DST)"; \
-		mkdir -p $(dir $($@_DST)) && cp -rT $($@_SRC) $($@_DST); \
+	if [ -d "$($@_DST)" ]; then \
+		if [ "$($@_FORCE)" = "true" ]; then \
+			echo "$($@_LOG_PREFIX) Removing $($@_DST)"; \
+			rm -r $($@_DST); \
+		else \
+			echo "$($@_LOG_PREFIX) $($@_DST) already exists, not overwriting"; \
+			return; \
+		fi; \
 	fi
+
+	if [ ! -d "$(dir $($@_DST))" ]; then \
+		mkdir -p $(dir $($@_DST)); \
+	fi
+
+	echo "$($@_LOG_PREFIX) Copying $($@_SRC) to $($@_DST)"
+	cp -r $($@_SRC) $($@_DST)
 endef
