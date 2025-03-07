@@ -3,8 +3,7 @@
 export ZSH="${HOME}/.oh-my-zsh"
 
 ZSH_THEME="stmharry"
-ENABLE_CORRECTION="true"
-plugins=(virtualenv git)
+plugins=(virtualenv)
 
 source "${ZSH}/oh-my-zsh.sh"
 

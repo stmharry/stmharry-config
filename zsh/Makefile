@@ -42,3 +42,8 @@ install-oh-my-zsh-theme-%:
 	@$(call copy-file, $*, $(OH_MY_ZSH_THEME_DIR)/$*, "[zsh/oh-my-zsh-theme]")
 
 install-oh-my-zsh-themes: $(addprefix install-oh-my-zsh-theme-, $(OH_MY_ZSH_THEMES))
+
+update-oh-my-zsh-theme-%:
+	@$(call copy-file, $(OH_MY_ZSH_THEME_DIR)/$*, $*, "[zsh/oh-my-zsh-theme]", "true")
+
+update-oh-my-zsh-themes: $(addprefix update-oh-my-zsh-theme-, $(OH_MY_ZSH_THEMES))

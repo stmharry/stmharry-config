@@ -1,3 +1,5 @@
+include utils.mk
+
 TARGETS += \
 	system \
 	zsh \
