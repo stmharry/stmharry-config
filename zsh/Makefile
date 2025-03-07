@@ -39,9 +39,9 @@ install-oh-my-zsh:
 	@$(SH_C) "$(curl -fsSL 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh')"
 
 install-oh-my-zsh-theme-%:
-	@$(call copy-file, $*, $(OH_MY_ZSH_THEME_DIR)/$*, "[zsh/oh-my-zsh-theme]")
+	@$(call copy-file, $*, $(OH_MY_ZSH_THEME_DIR)/$*, "[zsh/oh-my-zsh-theme]", $(FORCE))
 
-install-oh-my-zsh-themes: $(addprefix install-oh-my-zsh-theme-, $(OH_MY_ZSH_THEMES), $(FORCE))
+install-oh-my-zsh-themes: $(addprefix install-oh-my-zsh-theme-, $(OH_MY_ZSH_THEMES))
 
 update-oh-my-zsh-theme-%:
 	@$(call copy-file, $(OH_MY_ZSH_THEME_DIR)/$*, $*, "[zsh/oh-my-zsh-theme]", "true")
