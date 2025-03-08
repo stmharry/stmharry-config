@@ -2,7 +2,6 @@
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    optional = true,
     opts = {
       file_types = { "markdown", "copilot-chat" },
     },
@@ -31,13 +30,32 @@ return {
       },
       -- See Configuration section for options
     },
+    config = function(_, opts)
+      local chat = require "CopilotChat"
+      chat.setup(opts)
+
+      local select = require "CopilotChat.select"
+      vim.api.nvim_create_user_command(
+        "CopilotChatBuffer",
+        function(args) chat.ask(args.args, { selection = select.buffer }) end,
+        { nargs = "*", range = true }
+      )
+    end,
     keys = {
       { "<leader>a", "", mode = { "n", "v" }, desc = "+Copilot Chat" },
       -- CopilotChat-defined commands
-      { "<leader>aa", "<cmd>CopilotChatToggle<cr>", mode = { "n", "v" }, desc = "Toggle" },
-      { "<leader>ar", "<cmd>CopilotChatReset<cr>", desc = "Reset" },
-      { "<leader>ac", "<cmd>CopilotChatCommit<cr>", desc = "Commit" },
+      { "<leader>at", "<cmd>CopilotChatToggle<cr>", mode = { "n", "v" }, desc = "Toggle Chat" },
+      { "<leader>ar", "<cmd>CopilotChatReset<cr>", desc = "Reset Chat" },
+      { "<leader>ac", "<cmd>CopilotChatCommit<cr>", desc = "Write Commit Message (with git diff)" },
       -- Custom commands
+      {
+        "<leader>aq",
+        function()
+          local input = vim.fn.input ":"
+          if input ~= "" then vim.cmd("CopilotChatBuffer " .. input) end
+        end,
+        desc = "Quick Chat (with buffer)",
+      },
     },
     -- See Commands section for default commands if you want to lazy load on them
   },
