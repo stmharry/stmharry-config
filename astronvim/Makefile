@@ -14,4 +14,4 @@ install-configs:
 	@$(call copy-dir, nvim, $(NVIM_DIR), "[nvim/config]", $(FORCE))
 
 update-configs:
-	$(call copy-dir, $(NVIM_DIR), nvim, "[nvim/config]", "true")
+	@$(call copy-dir, $(NVIM_DIR), nvim, "[nvim/config]", "true")
