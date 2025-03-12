@@ -32,13 +32,6 @@ if [ -f "${HOME}/.iterm2_shell_integration.zsh" ]; then
   source "${HOME}/.iterm2_shell_integration.zsh"
 fi
 
-# homebrew
-
-if [ -d "/opt/homebrew" ]; then
-  export PATH="/opt/homebrew/bin:${PATH}"
-  eval "$(brew shellenv)"
-fi
-
 # go
 
 if [ -d "${HOME}/go" ]; then

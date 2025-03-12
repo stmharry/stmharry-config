@@ -11,9 +11,12 @@ install: $(INSTALL_TARGETS)
 
 ### CONFIGS
 
+# NOTE: see https://shreevatsa.wordpress.com/2008/03/30/zshbash-startup-files-loading-order-bashrc-zshrc-etc/
+
 FORCE ?= false
 CONFIGS += \
-	.zshrc
+	.zprofile \
+	.zshrc 
 
 install-config-%:
 	@$(call copy-file, $*, $(HOME)/$*, "[zsh/config]", $(FORCE))
