@@ -23,6 +23,20 @@ return {
         Commit = {
           prompt = ""
             .. "Given the Git diff, generate a concise and descriptive Git commit message using Gitmoji conventions. "
+            .. 'A gitmoji commit message is in the format of "<intention> [scope?][:?] <message>" and is composed using the following pieces: \n'
+            .. "- intention: The intention you want to express with the commit, using an emoji in unicode format. \n"
+            .. "- scope: An optional string that adds contextual information for the scope of the change. \n"
+            .. "- message: A brief explanation of the change. \n"
+            .. ""
+            .. "Examples: \n"
+            .. "- ⚡️ Lazyload home screen images. \n"
+            .. "- 🐛 Fix `onClick` event handler. \n"
+            .. "- 🔖 Bump version `1.2.0` \n"
+            .. "- ♻️ (components): Transform classes to hooks \n"
+            .. "- 📈 Add analytics to the dashboard \n"
+            .. "- 🌐 Support Japanese language \n"
+            .. "- ♿️ (account): Improve modals a11y \n"
+            .. ""
             .. "Select the most appropriate emoji based on the changes and ensure the commit message is clear and within 72 characters. "
             .. "Optionally, include a short description if necessary.",
           sticky = "#git:staged",
