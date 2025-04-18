@@ -43,6 +43,10 @@ fi
 
 eval "$(thefuck --alias --enable-experimental-instant-mode)"
 
+# secrets
+
+[ -f "$HOME/.zsh_secrets" ] && source "$HOME/.zsh_secrets"
+
 # aliases
 
 alias l="ls"
