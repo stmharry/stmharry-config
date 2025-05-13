@@ -1,22 +1,22 @@
-# Header
-# <type>(<scope>): <subject>
+# Gitmoji Commit Message Template
+# <emoji> [(scope)]: <subject>
 
-# type list:
-# feat: A new feature
-# fix: A bug fix
-# docs: Documentation only changes
-# style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-# refactor: A code change that neither fixes a bug nor adds a feature
-# perf: A code change that improves performance
-# test: Adding missing tests or correcting existing tests
-# build: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-# ci: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
-# chore: Other changes that don't modify src or test files
-# revert: Reverts a previous commit
+# ✨ feat       Introduce new features
+# 🐛 fix        Fix a bug
+# 📝 docs       Documentation only changes
+# 💄 style      Code style changes (formatting, whitespace)
+# ♻️ refactor   Code refactoring without behavior change
+# ⚡️ perf       Improve performance
+# ✅ test       Add or update tests
+# 🔧 build      Changes to build system or dependencies
+# 👷 ci         CI configuration and scripts
+# 🔒 chore      Other changes not affecting src or tests
+# ⏪️ revert     Revert a previous commit
 
-# Body
-# 72-character wrapped.
+# Body (optional)
+# - Explain *what* and *why*, not *how*
+# - Wrap text at 72 characters
 
-# Footer
-# Fill in the task number (if any)
-# https://docs.gitlab.com/ee/integration/jira/index.html
+# Footer (optional)
+# - Issue tracker or task ID, e.g.: JIRA-1234
+# - Co-authored-by: Name <email@example.com>
