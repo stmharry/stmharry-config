@@ -9,7 +9,9 @@ ifeq ($(UNAME_S),Linux)
 
 	INSTALL_TARGETS += \
 		install-apt-packages \
-		install-python-packages
+		install-homebrew \
+		install-homebrew-packages \
+		install-nvm
 
 	APT_PACKAGES += \
 		golang-go \
@@ -17,8 +19,10 @@ ifeq ($(UNAME_S),Linux)
 		git-delta \
 		neovim
 
-	PYTHON_PACKAGES += \
-		thefuck
+	HOMEBREW_PACKAGES += \
+		oven-sh/bun/bun \
+		thefuck \
+		uv
 
 else ifeq ($(UNAME_S),Darwin)  # macOS
 
@@ -27,14 +31,17 @@ else ifeq ($(UNAME_S),Darwin)  # macOS
 
 	INSTALL_TARGETS += \
 		install-homebrew \
-		install-homebrew-packages
+		install-homebrew-packages \
+		install-nvm
 
 	HOMEBREW_PACKAGES += \
 		go \
 		git \
 		git-delta \
 		neovim \
-		thefuck
+		oven-sh/bun/bun \
+		thefuck \
+		uv
 
 endif
 
@@ -51,32 +58,40 @@ update-configs:
 
 ### APT
 
-APT = /usr/bin/apt
+define install-apt-package
+	$(eval $@_PACKAGE := $(1))
+	@$(APT) install -y $($@_PACKAGE)
+endef
 
-install-apt-package-%:
-	@$(APT) install $*
+install-apt-packages:
+	@$(foreach package, $(APT_PACKAGES), $(call install-apt-package, "$(package)"))
 
-install-apt-packages: $(addprefix install-apt-package-, $(APT_PACKAGES))
+### SHELL
+
+define install-shell-package
+	$(eval $@_URL := $(1))
+	curl -fsSL $($@_URL) | bash
+endef
 
 ### HOMEBREW
 
-SH_C = sh -c
-BREW = /opt/homebrew/bin/brew
+BREW = brew
+HOMEBREW_SH_URL = https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+
+define install-homebrew-package
+	$(eval $@_PACKAGE := $(1))
+	brew install $($@_PACKAGE)
+endef
 
 install-homebrew:
-	@$(SH_C) "$(curl -fsSL 'https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh')"
+	@$(call install-shell-package, $(HOMEBREW_SH_URL))
 
-install-homebrew-package-%:
-	@$(BREW) install $*
+install-homebrew-packages:
+	@$(foreach package, $(HOMEBREW_PACKAGES), $(call install-homebrew-package, "$(package)"))
 
-install-homebrew-packages: $(addprefix install-homebrew-package-, $(HOMEBREW_PACKAGES))
+### NVM
 
-### PYTHON
+NVM_SH_URL = https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh
 
-PYTHON = /usr/bin/python3
-PIP = $(PYTHON) -m pip
-
-install-python-package-%:
-	$(PIP) install $*
-
-install-python-packages: $(addprefix install-python-package-, $(PYTHON_PACKAGES))
+install-nvm:
+	@$(call install-shell-package, $(NVM_SH_URL))
