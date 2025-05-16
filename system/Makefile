@@ -1,17 +1,26 @@
 include ../utils.mk
 
 INSTALL_TARGETS += \
-	install-configs
+	install-configs \
+	install-homebrew \
+	install-homebrew-packages \
+	install-nvm \
+	install-bun-packages
+
+HOMEBREW_PACKAGES += \
+	codex \
+	oven-sh/bun/bun \
+	thefuck \
+	uv
+
+BUN_PACKAGES +=
 
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Linux)
 
 	INSTALL_TARGETS += \
-		install-apt-packages \
-		install-homebrew \
-		install-homebrew-packages \
-		install-nvm
+		install-apt-packages
 
 	APT_PACKAGES += \
 		golang-go \
@@ -19,29 +28,16 @@ ifeq ($(UNAME_S),Linux)
 		git-delta \
 		neovim
 
-	HOMEBREW_PACKAGES += \
-		oven-sh/bun/bun \
-		thefuck \
-		uv
-
 else ifeq ($(UNAME_S),Darwin)  # macOS
 
 	CONFIGS += \
 		Harry.json
 
-	INSTALL_TARGETS += \
-		install-homebrew \
-		install-homebrew-packages \
-		install-nvm
-
 	HOMEBREW_PACKAGES += \
 		go \
 		git \
 		git-delta \
-		neovim \
-		oven-sh/bun/bun \
-		thefuck \
-		uv
+		neovim
 
 endif
 
@@ -95,3 +91,13 @@ NVM_SH_URL = https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh
 
 install-nvm:
 	@$(call install-shell-package, $(NVM_SH_URL))
+
+### BUN
+
+define install-bun-package
+	$(eval $@_PACKAGE := $(1))
+	bun install -g $($@_PACKAGE)
+endef
+
+install-bun-packages:
+	@$(foreach package, $(BUN_PACKAGES), $(call install-bun-package, "$(package)"))
