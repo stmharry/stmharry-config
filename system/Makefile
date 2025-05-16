@@ -8,14 +8,14 @@ INSTALL_TARGETS += \
 	install-bun-packages
 
 HOMEBREW_PACKAGES += \
-	codex \
 	grip \
 	oven-sh/bun/bun \
 	pre-commit \
 	thefuck \
 	uv
 
-BUN_PACKAGES +=
+BUN_PACKAGES += \
+	@openai/codex
 
 UNAME_S := $(shell uname -s)
 
@@ -84,7 +84,7 @@ endef
 install-homebrew:
 	@$(call install-shell-package, $(HOMEBREW_SH_URL))
 
-install-homebrew-packages:
+install-homebrew-packages: install-homebrew
 	@$(foreach package, $(HOMEBREW_PACKAGES), $(call install-homebrew-package, "$(package)"))
 
 ### NVM
@@ -101,5 +101,5 @@ define install-bun-package
 	bun install -g $($@_PACKAGE)
 endef
 
-install-bun-packages:
+install-bun-packages: install-homebrew-packages
 	@$(foreach package, $(BUN_PACKAGES), $(call install-bun-package, "$(package)"))
