@@ -9,7 +9,9 @@ INSTALL_TARGETS += \
 
 HOMEBREW_PACKAGES += \
 	codex \
+	grip \
 	oven-sh/bun/bun \
+	pre-commit \
 	thefuck \
 	uv
 
