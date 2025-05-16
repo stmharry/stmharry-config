@@ -1,76 +1,132 @@
-# System Configs for `stmharry`
+# stmharry-config
 
 ## Overview
-This repository contains configuration files and setup scripts for various tools and environments used by `stmharry`. The configurations are structured into directories based on their respective applications, and installation is managed using `Makefile`s.
+This repository contains personal system and application configurations for **stmharry**. It organizes dotfiles and setup scripts for shell, editor, version control, terminal multiplexer, Gmail filter management, and system-level dependencies. Each component is managed via a dedicated `Makefile` for easy installation and updates.
 
-## Directory Structure
+## Repository Structure
 ```
-└── stmharry-config/
+stmharry-config/
+├── Makefile            # top-level installer for core components
+├── utils.mk            # shared Makefile utilities
+├── astronvim/          # AstroNvim (Neovim) configuration
+│   ├── Makefile
+│   └── nvim/
+├── git/                # Git configuration (.gitconfig, .gitmessage.txt)
+│   ├── Makefile
+│   ├── .gitconfig
+│   └── .gitmessage.txt
+├── gmailctl/           # Gmail filter management with gmailctl
+│   ├── Makefile
+│   └── config.jsonnet
+├── system/             # System-level setup (brew/apt packages, dotfiles)
+│   ├── Makefile
+│   └── Harry.json
+├── tmux/               # tmux configuration and TPM
+│   ├── Makefile
+│   └── tmux.conf
+└── zsh/                # Zsh configuration and custom theme
     ├── Makefile
-    ├── utils.mk
-    ├── .pre-commit-config.yaml
-    ├── astronvim/
-    │   ├── Makefile
-    │   └── nvim/
-    ├── gmailctl/
-    │   ├── Makefile
-    │   └── config.jsonnet
-    ├── tmux/
-    │   ├── Makefile
-    │   └── tmux.conf
-    └── zsh/
-        ├── Harry.json
-        ├── Makefile
-        ├── stmharry.zsh-theme
-        └── .zshrc
+    ├── stmharry.zsh-theme
+    ├── .zprofile
+    └── .zshrc
 ```
 
-## Configuration Details
-### Zsh
-Located in `zsh/`, this directory contains Zsh-related configurations.
-- `.zshrc` sets up environment variables, aliases, and plugin configurations.
-- `stmharry.zsh-theme` defines the custom prompt appearance.
-- `Makefile` provides installation scripts for `oh-my-zsh` and additional tools.
+## Components
+Below is a summary of each configuration component:
 
-### Tmux
-Located in `tmux/`, this directory contains the configuration for `tmux`.
-- `tmux.conf` contains the user-defined configuration.
-- `Makefile` automates the installation of `tmux` and its plugin manager (`tpm`).
+### system
+- Path: `system/`
+- Installs system dependencies (Homebrew or apt) and copies `Harry.json` to `~`.
 
-### Astronvim (Neovim Configuration)
-Located in `astronvim/nvim/`, this directory contains the configuration for AstroNvim, a highly extensible Neovim distribution.
-- Plugins are defined in `lua/plugins/`
-- Core settings are managed in `init.lua`, `lazy_setup.lua`, and `polish.lua`.
-- Uses Lazy.nvim for plugin management.
+### git
+- Path: `git/`
+- Manages Git configuration:
+  - `.gitconfig`
+  - `.gitmessage.txt`
 
-### Gmailctl
-Located in `gmailctl/`, this directory contains configuration for managing Gmail filters using `gmailctl`.
-- The `config.jsonnet` file defines filters and labels.
-- `Makefile` automates the setup and configuration updates.
+### zsh
+- Path: `zsh/`
+- Manages Zsh shell configuration:
+  - `.zprofile` (login shell settings)
+  - `.zshrc` (interactive shell settings)
+  - `stmharry.zsh-theme` (Oh My Zsh custom prompt theme)
+  - Installs Oh My Zsh and custom theme
 
+### tmux
+- Path: `tmux/`
+- Manages tmux configuration:
+  - `tmux.conf` (copied to `~/.config/tmux/tmux.conf`)
+  - Installs TPM (tmux plugin manager) and plugins
+
+### astronvim
+- Path: `astronvim/`
+- Provides AstroNvim (Neovim) setup:
+  - Stores `nvim/` config directory
+  - Uses Lazy.nvim for plugin management
+
+### gmailctl
+- Path: `gmailctl/`
+- Configures Gmail filters via [gmailctl](https://github.com/mbrt/gmailctl):
+  - `config.jsonnet`
+  - Installs `gmailctl` CLI and initializes configuration
 
 ## Installation
-To install the configurations, use the provided `Makefile`. Run the following command from the root directory:
+
+### Prerequisites
+- Git
+- GNU Make
+- curl (for script installs)
+
+### Full Installation
+Install core components (system, git, zsh, tmux, astronvim) from the root:
 
 ```sh
 make install
 ```
 
-To install a specific component, use:
+### Per-Component Installation
+From the root directory, you can install individual components:
+
 ```sh
-make install-<component>
+make install-system
+make install-git
+make install-zsh
+make install-tmux
+make install-astronvim
 ```
-Where `<component>` can be `zsh`, `tmux`, `astronvim`, or `gmailctl`.
+
+To install Gmailctl and its configuration:
+
+```sh
+make -C gmailctl install
+```
+
+### Overwriting Existing Configs
+By default, existing configuration files are not overwritten. To force overwrite, set:
+
+```sh
+make install FORCE=true
+# or for a specific component:
+make install-zsh FORCE=true
+```
 
 ## Updating Configurations
-To update the configuration files from the system, use:
+Each component provides an `update-configs` target to pull the latest from this repo into your home directory. For example:
+
 ```sh
-make update-configs
+make -C system update-configs
+make -C git    update-configs
+make -C zsh    update-configs
+make -C tmux   update-configs
+make -C astronvim update-configs
+make -C gmailctl update-configs
 ```
-For a specific component:
+
+Alternatively, to update a single file:
+
 ```sh
-make update-configs-<component>
+make -C git update-config-.gitconfig
 ```
 
 ## License
-This repository is maintained by `stmharry`. Usage and modifications are permitted under the terms specified by the repository owner.
+This repository is maintained by **stmharry**. Usage and modifications are permitted under the terms specified by the repository owner.
