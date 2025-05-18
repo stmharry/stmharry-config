@@ -20,7 +20,7 @@ return {
     -- overrides `require("mason-null-ls").setup(...)`
     opts = {
       ensure_installed = {
-        "black", -- python
+        "ruff", -- python
         "stylua", -- lua
         -- add more arguments for adding more null-ls sources
       },
