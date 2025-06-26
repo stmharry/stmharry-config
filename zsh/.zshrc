@@ -32,7 +32,23 @@ alias l="ls"
 alias ll="ls -alh"
 alias du="du -h"
 alias vim="nvim"
-alias ssh-tw-ws="ssh -p 6999 chia@ap-gateway.stmharry.io"
+alias mosh-tw-ws="mosh chia@tw-ws.stmharry.io"
+
+ssh-connect() {
+  local user="chia" host="$1" opts=("${@:2}")
+
+  echo "Trying: ssh ${opts[*]} ${user}@${host} ..."
+  if ssh -o BatchMode=yes -o ConnectTimeout=5 "${opts[@]}" "${user}@${host}" exit &>/dev/null; then
+    echo "✔ Connected to ${host}"
+    exec ssh "${opts[@]}" "${user}@${host}"
+  else
+    return 1
+  fi
+}
+
+ssh-tw-ws() {
+  ssh-connect 192.168.0.41 || ssh-connect tw-ws.stmharry.io || ssh-connect ap-gateway.stmharry.io -p 6999
+}
 
 # secrets
 
