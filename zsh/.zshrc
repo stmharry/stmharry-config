@@ -62,6 +62,10 @@ ssh-tw-ws() {
 
 [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
+# cuda
+
+export PATH="/usr/local/cuda/bin:${PATH}"
+
 # nvm
 
 export NVM_DIR="$HOME/.nvm"
