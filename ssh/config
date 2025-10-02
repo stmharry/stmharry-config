@@ -1,0 +1,12 @@
+Host *
+  ServerAliveInterval 60
+  ServerAliveCountMax 5
+
+Host dentscape-ws 
+  HostName ssh.dentscape.work
+  User harry
+  ProxyCommand cloudflared access ssh --hostname %h
+
+Host tw-ws
+  HostName tw-ws.stmharry.io
+  User chia
