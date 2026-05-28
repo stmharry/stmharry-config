@@ -128,6 +128,10 @@ kind = "file"
 source = "git/.gitconfig"
 target = "~/.gitconfig"
 required = true
+private = false
+group = "core"
+tool = "git"
+origin = "custom"
 
 [[configs]]
 id = "gitmessage"
@@ -135,6 +139,10 @@ kind = "file"
 source = "git/.gitmessage.txt"
 target = "~/.gitmessage.txt"
 required = true
+private = false
+group = "core"
+tool = "git"
+origin = "custom"
 
 [[configs]]
 id = "zprofile"
