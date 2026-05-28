@@ -20,7 +20,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parent
-MANIFEST = ROOT / "project.toml"
+MANIFEST = ROOT / "config.toml"
 BACKUP_FORMAT = "%Y%m%d-%H%M%S"
 
 
@@ -275,7 +275,7 @@ def load_and_validate() -> dict[str, Any]:
     errors = manifest_errors(manifest)
     if errors:
         joined = "\n".join(f"- {error}" for error in errors)
-        raise ValueError(f"invalid project.toml:\n{joined}")
+        raise ValueError(f"invalid config.toml:\n{joined}")
     return manifest
 
 

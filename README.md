@@ -1,14 +1,14 @@
 # stmharry-config
 
 ## Overview
-This repository contains personal system and application configurations for **stmharry**. It organizes dotfiles and setup metadata for shell, editor, version control, terminal multiplexer, Gmail filter management, and system-level dependencies. `project.toml` is the desired-state contract, and `./stmharry-config.py` is the guarded vanilla-Python reconciliation tool.
+This repository contains personal system and application configurations for **stmharry**. It organizes dotfiles and setup metadata for shell, editor, version control, terminal multiplexer, Gmail filter management, and system-level dependencies. `config.toml` is the desired-state contract, and `./cli.py` is the guarded vanilla-Python reconciliation tool.
 
 ## Repository Structure
 ```
 stmharry-config/
 ├── AGENTS.md           # agent workflow and repository policy
-├── project.toml        # declarative desired-state contract
-├── stmharry-config.py  # guarded reconciliation CLI
+├── config.toml         # declarative desired-state contract
+├── cli.py              # guarded reconciliation CLI
 ├── astronvim/          # AstroNvim (Neovim) configuration
 │   └── nvim/
 ├── git/                # Git configuration (.gitconfig, .gitmessage.txt)
@@ -75,15 +75,15 @@ Below is a summary of each configuration component:
 - Git
 - Python 3.11 or newer
 
-`project.toml` is the machine-readable desired-state contract for tools and
-configuration targets. `./stmharry-config.py` reads that contract, reports
+`config.toml` is the machine-readable desired-state contract for tools and
+configuration targets. `./cli.py` reads that contract, reports
 drift, and guardedly applies selected configuration groups.
 
 ```sh
-python3 ./stmharry-config.py plan
-python3 ./stmharry-config.py check
-python3 ./stmharry-config.py diff
-python3 ./stmharry-config.py capture
+python3 ./cli.py plan
+python3 ./cli.py check
+python3 ./cli.py diff
+python3 ./cli.py capture
 ```
 
 The default group is `core`, which covers required Git, zsh, tmux, and curated
@@ -91,7 +91,7 @@ AstroNvim configuration. Applying configs requires an explicit confirmation
 flag:
 
 ```sh
-python3 ./stmharry-config.py apply --group core --yes
+python3 ./cli.py apply --group core --yes
 ```
 
 When a target already exists and differs, the CLI creates a timestamped backup
@@ -100,15 +100,15 @@ beside the target before replacing it.
 Optional private groups are never applied by default. Apply them explicitly:
 
 ```sh
-python3 ./stmharry-config.py apply --group ssh --yes
-python3 ./stmharry-config.py apply --group gmailctl --yes
-python3 ./stmharry-config.py apply --group iterm2 --yes
+python3 ./cli.py apply --group ssh --yes
+python3 ./cli.py apply --group gmailctl --yes
+python3 ./cli.py apply --group iterm2 --yes
 ```
 
 For sandbox testing, point the target home at a temporary directory:
 
 ```sh
-python3 ./stmharry-config.py apply --group core --home /tmp/stm-home --yes
+python3 ./cli.py apply --group core --home /tmp/stm-home --yes
 ```
 
 ## Commands

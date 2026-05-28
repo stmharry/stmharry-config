@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
-SCRIPT = ROOT / "stmharry-config.py"
+SCRIPT = ROOT / "cli.py"
 
 
 def load_cli():

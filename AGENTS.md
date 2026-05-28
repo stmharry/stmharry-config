@@ -77,17 +77,17 @@ unless the behavior change is intentional, validated, and documented.
 
 ## Declarative State Workflow
 
-`project.toml` is the desired-state contract for tools and configuration
-targets. `./stmharry-config.py` is the guarded reconciliation CLI for that
+`config.toml` is the desired-state contract for tools and configuration
+targets. `./cli.py` is the guarded reconciliation CLI for that
 contract and must remain runnable with vanilla Python 3.11+.
 
-- Use `project.toml` before changing setup, update, or synchronization behavior.
-- Run `python3 ./stmharry-config.py plan`, `check`, and `diff` before proposing
+- Use `config.toml` before changing setup, update, or synchronization behavior.
+- Run `python3 ./cli.py plan`, `check`, and `diff` before proposing
   host mutations.
 - Keep package installation as planned output until an explicit guarded package
   mutation command is implemented and documented.
 - Keep repo-to-home apply behavior separate from home-to-repo capture behavior.
-- Do not add new host mutation to `./stmharry-config.py` without an explicit
+- Do not add new host mutation to `./cli.py` without an explicit
   command, `--yes` confirmation, backups where applicable, tests, and docs.
 
 ## Checks
@@ -96,18 +96,18 @@ Before pushing a logical change, run:
 
 ```bash
 python3 -m unittest
-python3 ./stmharry-config.py plan
-python3 ./stmharry-config.py check
-python3 ./stmharry-config.py diff
-python3 ./stmharry-config.py capture
+python3 ./cli.py plan
+python3 ./cli.py check
+python3 ./cli.py diff
+python3 ./cli.py capture
 ```
 
 For guarded apply changes, also run against a temporary home:
 
 ```bash
 tmp_home="$(mktemp -d)"
-python3 ./stmharry-config.py apply --group core --home "$tmp_home" --yes
-python3 ./stmharry-config.py check --group core --home "$tmp_home" --strict
+python3 ./cli.py apply --group core --home "$tmp_home" --yes
+python3 ./cli.py check --group core --home "$tmp_home" --strict
 rm -rf "$tmp_home"
 ```
 
