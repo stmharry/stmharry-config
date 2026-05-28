@@ -16,7 +16,7 @@ install: $(INSTALL_TARGETS)
 FORCE ?= false
 CONFIGS += \
 	.zprofile \
-	.zshrc 
+	.zshrc
 
 install-config-%:
 	@$(call copy-file, $*, $(HOME)/$*, "[zsh/config]", $(FORCE))

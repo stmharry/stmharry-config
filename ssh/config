@@ -2,7 +2,7 @@ Host *
   ServerAliveInterval 60
   ServerAliveCountMax 5
 
-Host dentscape-ws 
+Host dentscape-ws
   HostName ssh.dentscape.work
   User harry
   ProxyCommand cloudflared access ssh --hostname %h
