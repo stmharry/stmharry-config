@@ -1,36 +1,28 @@
 # stmharry-config
 
 ## Overview
-This repository contains personal system and application configurations for **stmharry**. It organizes dotfiles and setup scripts for shell, editor, version control, terminal multiplexer, Gmail filter management, and system-level dependencies. The current legacy installation path uses component `Makefile`s, while the new read-only reconciliation path uses `project.toml` and `./stmharry-config.py`.
+This repository contains personal system and application configurations for **stmharry**. It organizes dotfiles and setup metadata for shell, editor, version control, terminal multiplexer, Gmail filter management, and system-level dependencies. `project.toml` is the desired-state contract, and `./stmharry-config.py` is the guarded vanilla-Python reconciliation tool.
 
 ## Repository Structure
 ```
 stmharry-config/
 ├── AGENTS.md           # agent workflow and repository policy
-├── Makefile            # top-level installer for core components
 ├── project.toml        # declarative desired-state contract
-├── stmharry-config.py  # read-only reconciliation CLI
-├── utils.mk            # shared Makefile utilities
+├── stmharry-config.py  # guarded reconciliation CLI
 ├── astronvim/          # AstroNvim (Neovim) configuration
-│   ├── Makefile
 │   └── nvim/
 ├── git/                # Git configuration (.gitconfig, .gitmessage.txt)
-│   ├── Makefile
 │   ├── .gitconfig
 │   └── .gitmessage.txt
 ├── gmailctl/           # Gmail filter management with gmailctl
-│   ├── Makefile
 │   └── config.jsonnet
 ├── ssh/                # SSH client configuration
 │   └── config
 ├── system/             # System-level setup (brew/apt packages, dotfiles)
-│   ├── Makefile
 │   └── Harry.json
 ├── tmux/               # tmux configuration and TPM
-│   ├── Makefile
 │   └── tmux.conf
 └── zsh/                # Zsh configuration and custom theme
-    ├── Makefile
     ├── stmharry.zsh-theme
     ├── .zprofile
     └── .zshrc
@@ -41,7 +33,7 @@ Below is a summary of each configuration component:
 
 ### system
 - Path: `system/`
-- Installs system dependencies (Homebrew or apt) and copies `Harry.json` to `~`.
+- Stores exported platform-specific application configuration such as `Harry.json`.
 
 ### git
 - Path: `git/`
@@ -55,13 +47,11 @@ Below is a summary of each configuration component:
   - `.zprofile` (login shell settings)
   - `.zshrc` (interactive shell settings)
   - `stmharry.zsh-theme` (Oh My Zsh custom prompt theme)
-  - Installs Oh My Zsh and custom theme
 
 ### tmux
 - Path: `tmux/`
 - Manages tmux configuration:
   - `tmux.conf` (copied to `~/.config/tmux/tmux.conf`)
-  - Installs TPM (tmux plugin manager) and plugins
 
 ### astronvim
 - Path: `astronvim/`
@@ -73,58 +63,21 @@ Below is a summary of each configuration component:
 - Path: `gmailctl/`
 - Configures Gmail filters via [gmailctl](https://github.com/mbrt/gmailctl):
   - `config.jsonnet`
-  - Installs `gmailctl` CLI and initializes configuration
 
 ### ssh
 - Path: `ssh/`
 - Stores SSH client configuration:
   - `config`
 
-## Installation
+## Reconciliation
 
 ### Prerequisites
 - Git
-- GNU Make
-- curl (for script installs)
-
-### Full Installation
-Install core components (system, git, zsh, tmux, astronvim) from the root:
-
-```sh
-make install
-```
-
-### Per-Component Installation
-From the root directory, you can install individual components:
-
-```sh
-make install-system
-make install-git
-make install-zsh
-make install-tmux
-make install-astronvim
-```
-
-To install Gmailctl and its configuration:
-
-```sh
-make -C gmailctl install
-```
-
-### Overwriting Existing Configs
-By default, existing configuration files are not overwritten. To force overwrite, set:
-
-```sh
-make install FORCE=true
-# or for a specific component:
-make install-zsh FORCE=true
-```
-
-## Declarative Reconciliation
+- Python 3.11 or newer
 
 `project.toml` is the machine-readable desired-state contract for tools and
-configuration targets. `./stmharry-config.py` reads that contract and inspects
-the current machine without installing packages or copying files.
+configuration targets. `./stmharry-config.py` reads that contract, reports
+drift, and guardedly applies selected configuration groups.
 
 ```sh
 python3 ./stmharry-config.py plan
@@ -133,31 +86,38 @@ python3 ./stmharry-config.py diff
 python3 ./stmharry-config.py capture
 ```
 
+The default group is `core`, which covers required Git, zsh, tmux, and curated
+AstroNvim configuration. Applying configs requires an explicit confirmation
+flag:
+
+```sh
+python3 ./stmharry-config.py apply --group core --yes
+```
+
+When a target already exists and differs, the CLI creates a timestamped backup
+beside the target before replacing it.
+
+Optional private groups are never applied by default. Apply them explicitly:
+
+```sh
+python3 ./stmharry-config.py apply --group ssh --yes
+python3 ./stmharry-config.py apply --group gmailctl --yes
+python3 ./stmharry-config.py apply --group iterm2 --yes
+```
+
+For sandbox testing, point the target home at a temporary directory:
+
+```sh
+python3 ./stmharry-config.py apply --group core --home /tmp/stm-home --yes
+```
+
+## Commands
+
 - `plan` summarizes host state, missing tools, and config drift.
 - `check` reports required tool and config status.
 - `diff` shows repo-to-home configuration differences.
 - `capture` shows home-to-repo changes that could be captured manually.
-
-This first reconciliation milestone is read-only. Use the legacy Makefile
-targets below for actual install or update operations.
-
-## Updating Configurations
-Each component provides an `update-configs` target to pull the latest from this repo into your home directory. For example:
-
-```sh
-make -C system update-configs
-make -C git    update-configs
-make -C zsh    update-configs
-make -C tmux   update-configs
-make -C astronvim update-configs
-make -C gmailctl update-configs
-```
-
-Alternatively, to update a single file:
-
-```sh
-make -C git update-config-.gitconfig
-```
+- `apply` copies selected repo configs to the target home after `--yes`.
 
 ## License
 This repository is maintained by **stmharry**. Usage and modifications are permitted under the terms specified by the repository owner.

@@ -39,13 +39,6 @@ required = true
 packages = { apt = "curl", brew = "curl" }
 
 [[tools]]
-id = "make"
-command = "make"
-channel = "stable"
-required = true
-packages = { apt = "make", brew = "make" }
-
-[[tools]]
 id = "zsh"
 command = "zsh"
 channel = "stable"
