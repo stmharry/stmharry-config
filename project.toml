@@ -183,6 +183,10 @@ kind = "file"
 source = "tmux/tmux.conf"
 target = "~/.config/tmux/tmux.conf"
 required = true
+private = false
+group = "core"
+tool = "tmux"
+origin = "custom"
 
 [[configs]]
 id = "nvim"
