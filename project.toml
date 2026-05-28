@@ -337,6 +337,10 @@ kind = "file"
 source = "gmailctl/config.jsonnet"
 target = "~/.gmailctl/config.jsonnet"
 required = false
+private = true
+group = "gmailctl"
+tool = "gmailctl"
+origin = "custom"
 
 [[configs]]
 id = "ssh"
@@ -344,6 +348,11 @@ kind = "file"
 source = "ssh/config"
 target = "~/.ssh/config"
 required = false
+private = true
+group = "ssh"
+tool = "ssh"
+origin = "custom"
+mode = "600"
 
 [[configs]]
 id = "system-harry"
@@ -351,4 +360,8 @@ kind = "file"
 source = "system/Harry.json"
 target = "~/Harry.json"
 required = false
+private = true
+group = "iterm2"
+tool = "iterm2"
+origin = "generated-export"
 platforms = ["Darwin"]
