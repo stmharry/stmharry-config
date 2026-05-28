@@ -150,6 +150,10 @@ kind = "file"
 source = "zsh/.zprofile"
 target = "~/.zprofile"
 required = true
+private = false
+group = "core"
+tool = "zsh"
+origin = "custom"
 
 [[configs]]
 id = "zshrc"
@@ -157,6 +161,10 @@ kind = "file"
 source = "zsh/.zshrc"
 target = "~/.zshrc"
 required = true
+private = false
+group = "core"
+tool = "zsh"
+origin = "custom"
 
 [[configs]]
 id = "zsh-theme"
@@ -164,6 +172,10 @@ kind = "file"
 source = "zsh/stmharry.zsh-theme"
 target = "~/.oh-my-zsh/custom/themes/stmharry.zsh-theme"
 required = true
+private = false
+group = "core"
+tool = "zsh"
+origin = "custom"
 
 [[configs]]
 id = "tmux"
