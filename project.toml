@@ -1,0 +1,194 @@
+[project]
+name = "stmharry-config"
+description = "Personal system and application configuration."
+
+[policy]
+state_model = "declarative"
+mutation_boundary = "explicit apply"
+version_policy = "channels preferred"
+host_variation = "host detection"
+
+[package_managers.apt]
+command = "apt"
+platforms = ["Linux"]
+
+[package_managers.brew]
+command = "brew"
+platforms = ["Darwin", "Linux"]
+
+[package_managers.bun]
+command = "bun"
+platforms = ["Darwin", "Linux"]
+
+[package_managers.go]
+command = "go"
+platforms = ["Darwin", "Linux"]
+
+[[tools]]
+id = "git"
+command = "git"
+channel = "stable"
+required = true
+packages = { apt = "git", brew = "git" }
+
+[[tools]]
+id = "curl"
+command = "curl"
+channel = "stable"
+required = true
+packages = { apt = "curl", brew = "curl" }
+
+[[tools]]
+id = "make"
+command = "make"
+channel = "stable"
+required = true
+packages = { apt = "make", brew = "make" }
+
+[[tools]]
+id = "zsh"
+command = "zsh"
+channel = "stable"
+required = true
+packages = { apt = "zsh", brew = "zsh" }
+
+[[tools]]
+id = "tmux"
+command = "tmux"
+channel = "stable"
+required = true
+packages = { apt = "tmux", brew = "tmux" }
+
+[[tools]]
+id = "neovim"
+command = "nvim"
+channel = "stable"
+required = true
+packages = { apt = "neovim", brew = "neovim" }
+
+[[tools]]
+id = "go"
+command = "go"
+channel = "stable"
+required = true
+packages = { apt = "golang-go", brew = "go" }
+
+[[tools]]
+id = "uv"
+command = "uv"
+channel = "stable"
+required = true
+packages = { brew = "uv" }
+
+[[tools]]
+id = "bun"
+command = "bun"
+channel = "stable"
+required = true
+packages = { brew = "oven-sh/bun/bun" }
+
+[[tools]]
+id = "pre-commit"
+command = "pre-commit"
+channel = "stable"
+required = true
+packages = { brew = "pre-commit" }
+
+[[tools]]
+id = "git-delta"
+command = "delta"
+channel = "stable"
+required = true
+packages = { apt = "git-delta", brew = "git-delta" }
+
+[[tools]]
+id = "codex"
+command = "codex"
+channel = "latest"
+required = true
+packages = { bun = "@openai/codex" }
+
+[[tools]]
+id = "gmailctl"
+command = "gmailctl"
+channel = "latest"
+required = false
+packages = { go = "github.com/mbrt/gmailctl/cmd/gmailctl@latest" }
+
+[[tools]]
+id = "cloudflared"
+command = "cloudflared"
+channel = "stable"
+required = false
+packages = { brew = "cloudflared" }
+
+[[configs]]
+id = "gitconfig"
+kind = "file"
+source = "git/.gitconfig"
+target = "~/.gitconfig"
+required = true
+
+[[configs]]
+id = "gitmessage"
+kind = "file"
+source = "git/.gitmessage.txt"
+target = "~/.gitmessage.txt"
+required = true
+
+[[configs]]
+id = "zprofile"
+kind = "file"
+source = "zsh/.zprofile"
+target = "~/.zprofile"
+required = true
+
+[[configs]]
+id = "zshrc"
+kind = "file"
+source = "zsh/.zshrc"
+target = "~/.zshrc"
+required = true
+
+[[configs]]
+id = "zsh-theme"
+kind = "file"
+source = "zsh/stmharry.zsh-theme"
+target = "~/.oh-my-zsh/custom/themes/stmharry.zsh-theme"
+required = true
+
+[[configs]]
+id = "tmux"
+kind = "file"
+source = "tmux/tmux.conf"
+target = "~/.config/tmux/tmux.conf"
+required = true
+
+[[configs]]
+id = "nvim"
+kind = "directory"
+source = "astronvim/nvim"
+target = "~/.config/nvim"
+required = true
+
+[[configs]]
+id = "gmailctl"
+kind = "file"
+source = "gmailctl/config.jsonnet"
+target = "~/.gmailctl/config.jsonnet"
+required = false
+
+[[configs]]
+id = "ssh"
+kind = "file"
+source = "ssh/config"
+target = "~/.ssh/config"
+required = false
+
+[[configs]]
+id = "system-harry"
+kind = "file"
+source = "system/Harry.json"
+target = "~/Harry.json"
+required = false
+platforms = ["Darwin"]

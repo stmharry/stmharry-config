@@ -75,6 +75,21 @@ unless the behavior change is intentional, validated, and documented.
   absolute paths, local logs, generated state, and machine-specific outputs out
   of Git.
 
+## Declarative State Workflow
+
+`project.toml` is the desired-state contract for tools and configuration
+targets. `./stmharry-config.py` is the read-only inspection CLI for that
+contract.
+
+- Use `project.toml` before changing setup, update, or synchronization behavior.
+- Run `python3 ./stmharry-config.py plan`, `check`, and `diff` before proposing
+  host mutations.
+- Treat Makefiles as legacy deterministic helpers until replacement behavior is
+  implemented and documented.
+- Keep repo-to-home apply behavior separate from home-to-repo capture behavior.
+- Do not add host mutation to `./stmharry-config.py` without an explicit
+  `apply`-style command and documented approval boundary.
+
 ## Checks
 
 Before pushing a logical change, run:
@@ -89,6 +104,15 @@ update command:
 ```bash
 make -n install
 make -n -C <component> install
+```
+
+For declarative state or CLI changes, run:
+
+```bash
+python3 ./stmharry-config.py plan
+python3 ./stmharry-config.py check
+python3 ./stmharry-config.py diff
+python3 ./stmharry-config.py capture
 ```
 
 Final handoff must state which checks were run. If a check could not be run,

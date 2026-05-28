@@ -1,12 +1,15 @@
 # stmharry-config
 
 ## Overview
-This repository contains personal system and application configurations for **stmharry**. It organizes dotfiles and setup scripts for shell, editor, version control, terminal multiplexer, Gmail filter management, and system-level dependencies. Each component is managed via a dedicated `Makefile` for easy installation and updates.
+This repository contains personal system and application configurations for **stmharry**. It organizes dotfiles and setup scripts for shell, editor, version control, terminal multiplexer, Gmail filter management, and system-level dependencies. The current legacy installation path uses component `Makefile`s, while the new read-only reconciliation path uses `project.toml` and `./stmharry-config.py`.
 
 ## Repository Structure
 ```
 stmharry-config/
+├── AGENTS.md           # agent workflow and repository policy
 ├── Makefile            # top-level installer for core components
+├── project.toml        # declarative desired-state contract
+├── stmharry-config.py  # read-only reconciliation CLI
 ├── utils.mk            # shared Makefile utilities
 ├── astronvim/          # AstroNvim (Neovim) configuration
 │   ├── Makefile
@@ -18,6 +21,8 @@ stmharry-config/
 ├── gmailctl/           # Gmail filter management with gmailctl
 │   ├── Makefile
 │   └── config.jsonnet
+├── ssh/                # SSH client configuration
+│   └── config
 ├── system/             # System-level setup (brew/apt packages, dotfiles)
 │   ├── Makefile
 │   └── Harry.json
@@ -70,6 +75,11 @@ Below is a summary of each configuration component:
   - `config.jsonnet`
   - Installs `gmailctl` CLI and initializes configuration
 
+### ssh
+- Path: `ssh/`
+- Stores SSH client configuration:
+  - `config`
+
 ## Installation
 
 ### Prerequisites
@@ -109,6 +119,27 @@ make install FORCE=true
 # or for a specific component:
 make install-zsh FORCE=true
 ```
+
+## Declarative Reconciliation
+
+`project.toml` is the machine-readable desired-state contract for tools and
+configuration targets. `./stmharry-config.py` reads that contract and inspects
+the current machine without installing packages or copying files.
+
+```sh
+python3 ./stmharry-config.py plan
+python3 ./stmharry-config.py check
+python3 ./stmharry-config.py diff
+python3 ./stmharry-config.py capture
+```
+
+- `plan` summarizes host state, missing tools, and config drift.
+- `check` reports required tool and config status.
+- `diff` shows repo-to-home configuration differences.
+- `capture` shows home-to-repo changes that could be captured manually.
+
+This first reconciliation milestone is read-only. Use the legacy Makefile
+targets below for actual install or update operations.
 
 ## Updating Configurations
 Each component provides an `update-configs` target to pull the latest from this repo into your home directory. For example:
