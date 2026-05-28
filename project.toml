@@ -189,11 +189,147 @@ tool = "tmux"
 origin = "custom"
 
 [[configs]]
-id = "nvim"
-kind = "directory"
-source = "astronvim/nvim"
-target = "~/.config/nvim"
+id = "nvim-neoconf"
+kind = "file"
+source = "astronvim/nvim/.neoconf.json"
+target = "~/.config/nvim/.neoconf.json"
 required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-stylua"
+kind = "file"
+source = "astronvim/nvim/.stylua.toml"
+target = "~/.config/nvim/.stylua.toml"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-init"
+kind = "file"
+source = "astronvim/nvim/init.lua"
+target = "~/.config/nvim/init.lua"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "scaffold"
+
+[[configs]]
+id = "nvim-lock"
+kind = "file"
+source = "astronvim/nvim/lazy-lock.json"
+target = "~/.config/nvim/lazy-lock.json"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "lock"
+
+[[configs]]
+id = "nvim-lazy-setup"
+kind = "file"
+source = "astronvim/nvim/lua/lazy_setup.lua"
+target = "~/.config/nvim/lua/lazy_setup.lua"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "scaffold"
+
+[[configs]]
+id = "nvim-copilot-chat"
+kind = "file"
+source = "astronvim/nvim/lua/plugins/copilot-chat.lua"
+target = "~/.config/nvim/lua/plugins/copilot-chat.lua"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-copilot"
+kind = "file"
+source = "astronvim/nvim/lua/plugins/copilot.lua"
+target = "~/.config/nvim/lua/plugins/copilot.lua"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-markdown-preview"
+kind = "file"
+source = "astronvim/nvim/lua/plugins/markdown-preview.lua"
+target = "~/.config/nvim/lua/plugins/markdown-preview.lua"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-mason"
+kind = "file"
+source = "astronvim/nvim/lua/plugins/mason.lua"
+target = "~/.config/nvim/lua/plugins/mason.lua"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-none-ls"
+kind = "file"
+source = "astronvim/nvim/lua/plugins/none-ls.lua"
+target = "~/.config/nvim/lua/plugins/none-ls.lua"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-rainbow-csv"
+kind = "file"
+source = "astronvim/nvim/lua/plugins/rainbow-csv.lua"
+target = "~/.config/nvim/lua/plugins/rainbow-csv.lua"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-neovim-yml"
+kind = "file"
+source = "astronvim/nvim/neovim.yml"
+target = "~/.config/nvim/neovim.yml"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
+
+[[configs]]
+id = "nvim-selene"
+kind = "file"
+source = "astronvim/nvim/selene.toml"
+target = "~/.config/nvim/selene.toml"
+required = true
+private = false
+group = "core"
+tool = "nvim"
+origin = "custom"
 
 [[configs]]
 id = "gmailctl"
