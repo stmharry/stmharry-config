@@ -1,83 +1,47 @@
 # stmharry-config
 
 ## Overview
-This repository contains personal system and application configurations for **stmharry**. It organizes dotfiles and setup metadata for shell, editor, version control, terminal multiplexer, Gmail filter management, and system-level dependencies. `config.toml` is the desired-state contract, and `./cli.py` is the guarded vanilla-Python reconciliation tool.
 
-## Repository Structure
-```
-stmharry-config/
-├── AGENTS.md           # agent workflow and repository policy
-├── config.toml         # declarative desired-state contract
-├── cli.py              # guarded reconciliation CLI
-├── astronvim/          # AstroNvim (Neovim) configuration
-│   └── nvim/
-├── git/                # Git configuration (.gitconfig, .gitmessage.txt)
-│   ├── .gitconfig
-│   └── .gitmessage.txt
-├── gmailctl/           # Gmail filter management with gmailctl
-│   └── config.jsonnet
-├── ssh/                # SSH client configuration
-│   └── config
-├── system/             # System-level setup (brew/apt packages, dotfiles)
-│   └── Harry.json
-├── tmux/               # tmux configuration and TPM
-│   └── tmux.conf
-└── zsh/                # Zsh configuration and custom theme
-    ├── stmharry.zsh-theme
-    ├── .zprofile
-    └── .zshrc
-```
+This is a public, guarded personal configuration repository for **stmharry**.
+`config.toml` declares the desired tools and owned configuration targets, and
+`./cli.py` is the vanilla-Python interface for inspecting drift and applying
+selected config groups with explicit confirmation.
 
-## Components
-Below is a summary of each configuration component:
+## Agent Setup Quickstart
 
-### system
-- Path: `system/`
-- Stores exported platform-specific application configuration such as `Harry.json`.
+If an agent is given this repository to set up a machine, it should treat the
+repository as a deterministic contract rather than improvise host changes.
+After installing or opening the agent, paste this repository root and ask it to
+follow the guarded workflow here.
 
-### git
-- Path: `git/`
-- Manages Git configuration:
-  - `.gitconfig`
-  - `.gitmessage.txt`
+1. Read `README.md`, `AGENTS.md`, and `config.toml`.
+1. Inspect the host with the read-only commands:
 
-### zsh
-- Path: `zsh/`
-- Manages Zsh shell configuration:
-  - `.zprofile` (login shell settings)
-  - `.zshrc` (interactive shell settings)
-  - `stmharry.zsh-theme` (Oh My Zsh custom prompt theme)
+   ```sh
+   python3 ./cli.py plan
+   python3 ./cli.py check
+   python3 ./cli.py diff
+   ```
 
-### tmux
-- Path: `tmux/`
-- Manages tmux configuration:
-  - `tmux.conf` (copied to `~/.config/tmux/tmux.conf`)
+1. Report missing tools, config drift, and the exact group to apply.
+1. Do not install packages or copy files by hand.
+1. Apply configuration only after explicit user confirmation:
 
-### astronvim
-- Path: `astronvim/`
-- Provides AstroNvim (Neovim) setup:
-  - Stores `nvim/` config directory
-  - Uses Lazy.nvim for plugin management
+   ```sh
+   python3 ./cli.py apply --group core --yes
+   ```
 
-### gmailctl
-- Path: `gmailctl/`
-- Configures Gmail filters via [gmailctl](https://github.com/mbrt/gmailctl):
-  - `config.jsonnet`
+`apply` backs up drifted targets beside the target before replacement. Optional
+private groups are never part of the default apply path.
 
-### ssh
-- Path: `ssh/`
-- Stores SSH client configuration:
-  - `config`
+## Human Quickstart
 
-## Reconciliation
+Prerequisites:
 
-### Prerequisites
 - Git
 - Python 3.11 or newer
 
-`config.toml` is the machine-readable desired-state contract for tools and
-configuration targets. `./cli.py` reads that contract, reports
-drift, and guardedly applies selected configuration groups.
+Inspect planned work and current drift:
 
 ```sh
 python3 ./cli.py plan
@@ -86,18 +50,13 @@ python3 ./cli.py diff
 python3 ./cli.py capture
 ```
 
-The default group is `core`, which covers required Git, zsh, tmux, and curated
-AstroNvim configuration. Applying configs requires an explicit confirmation
-flag:
+Apply the default required configuration group:
 
 ```sh
 python3 ./cli.py apply --group core --yes
 ```
 
-When a target already exists and differs, the CLI creates a timestamped backup
-beside the target before replacing it.
-
-Optional private groups are never applied by default. Apply them explicitly:
+Apply optional private groups only when needed:
 
 ```sh
 python3 ./cli.py apply --group ssh --yes
@@ -111,13 +70,26 @@ For sandbox testing, point the target home at a temporary directory:
 python3 ./cli.py apply --group core --home /tmp/stm-home --yes
 ```
 
-## Commands
+## Configuration Groups
 
-- `plan` summarizes host state, missing tools, and config drift.
-- `check` reports required tool and config status.
-- `diff` shows repo-to-home configuration differences.
-- `capture` shows home-to-repo changes that could be captured manually.
-- `apply` copies selected repo configs to the target home after `--yes`.
+`config.toml` is the authoritative inventory. Use `python3 ./cli.py plan` for
+the current host-specific view.
+
+| Group | Default | Private | Purpose |
+| --- | --- | --- | --- |
+| `core` | Yes | No | Required Git, shell, tmux, and editor configuration. |
+| `ssh` | No | Yes | SSH client configuration. |
+| `gmailctl` | No | Yes | Gmail filter configuration for gmailctl. |
+| `iterm2` | No | Yes | Platform-specific terminal profile export. |
+
+## Repository Maintenance
+
+Agents changing this repository must follow `AGENTS.md`. In short: keep changes
+small, update `README.md` for user-facing usage changes, update `AGENTS.md` for
+workflow or policy changes, validate with the documented checks, and use the
+repository commit-message format.
 
 ## License
-This repository is maintained by **stmharry**. Usage and modifications are permitted under the terms specified by the repository owner.
+
+This repository is maintained by **stmharry**. Usage and modifications are
+permitted under the terms specified by the repository owner.

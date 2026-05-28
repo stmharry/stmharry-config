@@ -1,35 +1,56 @@
 # Repository Agent Instructions
 
-These instructions are the machine-oriented contributor contract for this
-repository. They apply to all agent and contributor work in this repository.
+These instructions are the machine-oriented contract for agents using or
+changing this repository. `README.md` is the public usage entrypoint,
+`config.toml` is the source of truth for desired state, and `./cli.py` is the
+deterministic interface for inspection and guarded config apply.
 
 ## Scope
 
-This repository contains personal system and application configuration. Treat
-`README.md` as the human-facing overview, repository hierarchy, installation
-guide, and component reference. Treat this file as the repository workflow and
-policy source for agents.
+This repository contains personal system and application configuration. Agents
+usually operate in one of two lanes:
 
-- Keep changes small, intentional, and limited to the user-requested task.
-- Preserve existing behavior unless a logical change intentionally updates it.
-- Create files and directories only when a current task needs them.
-- Do not add placeholder scaffolding, generated outputs, or local machine state
-  to Git.
-- Do not duplicate project structure or component usage details from
-  `README.md`.
+- **Host Setup Operator:** use the repository to inspect or configure a machine.
+- **Repository Maintainer:** change the repository itself.
 
-## Documentation Contract
+Keep changes small, intentional, and limited to the user-requested task. Do not
+add placeholder scaffolding, generated outputs, local logs, credentials, private
+URLs, copied shell exports, or machine-specific state to Git.
 
-Every logical change must leave repository state, contributor instructions, and
-user-facing docs in agreement. Update the owning doc once instead of duplicating
-status, command blocks, or interpretation.
+## Host Setup Operator
 
-- `README.md` owns the human-facing overview, repository hierarchy,
-  installation instructions, and component descriptions.
-- `AGENTS.md` owns contributor workflow, repository policy, validation
-  expectations, and commit message format.
-- Workflow or process changes must update `AGENTS.md`.
-- User-facing usage changes must update `README.md`.
+When using this repository to set up or update a host, treat it as a guarded
+declarative system.
+
+1. Read `README.md`, `AGENTS.md`, and `config.toml`.
+1. Use `python3 ./cli.py plan`, `check`, and `diff` before proposing host
+   mutations.
+1. Report missing tools, selected config groups, and drift clearly.
+1. Do not install packages, copy files manually, or mutate the host through
+   hidden commands.
+1. Run `python3 ./cli.py apply --group <group> --yes` only after explicit user
+   confirmation.
+1. Keep repo-to-home apply separate from home-to-repo capture.
+
+Package installation is currently planned output only. Do not add package
+mutation unless a future explicit guarded command, confirmation flow, tests, and
+docs exist.
+
+## Repository Maintainer
+
+When changing the repository, preserve existing behavior unless the requested
+task intentionally changes it. Prefer narrow, coherent changes that can be
+validated and merged quickly.
+
+- `README.md` owns user-facing usage, public quickstarts, and compact
+  orientation.
+- `AGENTS.md` owns agent policy, maintainer workflow, validation expectations,
+  and commit-message format.
+- `config.toml` owns the machine-readable tool and configuration inventory.
+- `./cli.py` owns deterministic inspection and guarded apply behavior.
+
+Do not duplicate full config inventory in docs. Use prose for durable intent and
+interfaces; use `config.toml` and CLI output for exact owned files and targets.
 
 ## Trunk-Based Worktree Workflow
 
@@ -61,34 +82,14 @@ and surface the exact state instead of guessing.
 
 ## Change Style And Safety
 
-Changes should make the repository easier to maintain without changing behavior
-unless the behavior change is intentional, validated, and documented.
-
-- Prefer small, coherent, behavior-preserving changes that can merge cleanly.
 - Separate refactor commits from feature or behavior-change commits unless a
   task explicitly requires a coupled change.
 - Avoid speculative abstractions, empty scaffolding, and optionality that current
   usage does not need.
 - Treat commands that install, update, or copy into user directories as
   side-effectful. Do not run them unless the user explicitly asks.
-- Keep credentials, private URLs, copied shell exports, developer-specific
-  absolute paths, local logs, generated state, and machine-specific outputs out
-  of Git.
-
-## Declarative State Workflow
-
-`config.toml` is the desired-state contract for tools and configuration
-targets. `./cli.py` is the guarded reconciliation CLI for that
-contract and must remain runnable with vanilla Python 3.11+.
-
-- Use `config.toml` before changing setup, update, or synchronization behavior.
-- Run `python3 ./cli.py plan`, `check`, and `diff` before proposing
-  host mutations.
-- Keep package installation as planned output until an explicit guarded package
-  mutation command is implemented and documented.
-- Keep repo-to-home apply behavior separate from home-to-repo capture behavior.
-- Do not add new host mutation to `./cli.py` without an explicit
-  command, `--yes` confirmation, backups where applicable, tests, and docs.
+- Do not add new host mutation to `./cli.py` without an explicit command,
+  `--yes` confirmation, backups where applicable, tests, and docs.
 
 ## Checks
 
