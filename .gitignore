@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+.cache/
+*.stmharry-config-backup-*
+.zshrc.local
+.gitconfig.local
+CLAUDE.local.md

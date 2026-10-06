@@ -22,19 +22,38 @@ URLs, copied shell exports, or machine-specific state to Git.
 When using this repository to set up or update a host, treat it as a guarded
 declarative system.
 
-1. Read `README.md`, `AGENTS.md`, and `config.toml`.
-1. Use `python3 ./cli.py plan`, `check`, and `diff` before proposing host
-   mutations.
-1. Report missing tools, selected config groups, and drift clearly.
-1. Do not install packages, copy files manually, or mutate the host through
-   hidden commands.
-1. Run `python3 ./cli.py apply --group <group> --yes` only after explicit user
-   confirmation.
-1. Keep repo-to-home apply separate from home-to-repo capture.
+1. Read `README.md`, `AGENTS.md`, and `config.toml`; confirm that these
+   instructions are loaded by the agent.
+1. Run `python3 ./cli.py plan`, `check`, `diff`, and `capture` before proposing
+   host mutations. Report missing/incompatible tools, prerequisite phases,
+   selected config groups, drift, and local settings to preserve.
+1. Present the exact required setup recipes, bootstrap commands, and apply groups
+   for review. Execute only the approved steps; existing authorization for that
+   concrete plan is sufficient and does not need repeated confirmation.
+1. Use the manifest's platform recipes for approved package/prerequisite setup.
+   They are display-only guidance, not an installation engine. Skip compatible
+   existing tools and require explicit selection for optional tools.
+1. Preserve host-specific shell/Git settings in local overrides before replacing
+   managed files. Never copy credentials, private URLs, or environment exports
+   into the repository. Use the CLI for owned config copies.
+1. Run `python3 ./cli.py apply --group <group> --yes` only when that group is
+   explicitly approved. Keep repo-to-home apply separate from home-to-repo
+   capture; capture only reports candidates.
+1. Bootstrap after-apply plugins using the committed editor lock and an isolated
+   tmux server. Do not reload existing sessions or delete editor state without
+   authorization.
+1. In a fresh login shell, run `python3 ./cli.py check --strict` and the
+   manifest's verification commands. File-based prerequisite checks do not prove
+   runtime health. Report unresolved failures precisely.
+1. Leave authentication to the account owner in a separate interactive step;
+   preserve existing Codex/Claude credentials and global settings.
 
-Package installation is currently planned output only. Do not add package
-mutation unless a future explicit guarded command, confirmation flow, tests, and
-docs exist.
+Setup recipes target Ubuntu 24.04 and macOS. Check the OS before using them.
+`--home` redirects config/prerequisite paths, not tool detection or recipe
+commands. `check --strict --configs-only` verifies config copying only, not host
+readiness. The CLI must never execute setup/verify shell instructions. New CLI
+host mutation still requires an explicit guarded command, confirmation flow,
+tests, and documentation.
 
 ## Repository Maintainer
 
@@ -108,7 +127,7 @@ For guarded apply changes, also run against a temporary home:
 ```bash
 tmp_home="$(mktemp -d)"
 python3 ./cli.py apply --group core --home "$tmp_home" --yes
-python3 ./cli.py check --group core --home "$tmp_home" --strict
+python3 ./cli.py check --group core --home "$tmp_home" --strict --configs-only
 rm -rf "$tmp_home"
 ```
 
@@ -117,6 +136,11 @@ When available in the development environment, also run:
 ```bash
 uvx pre-commit run --all-files
 ```
+
+Smoke-test shell and tmux startup in isolated homes, and editor changes in an
+isolated HOME/XDG environment. Restore locks during setup; regenerate a changed
+editor lock from an isolated installation with optional plugins enabled. Keep
+all test logs, plugin downloads, and generated runtime state outside Git.
 
 Final handoff must state which checks were run. If a check could not be run,
 state the exact reason.

@@ -1,12 +1,13 @@
 [project]
 name = "stmharry-config"
 description = "Personal system and application configuration."
+supported_hosts = ["Ubuntu 24.04", "macOS"]
 
 [policy]
 state_model = "declarative"
-mutation_boundary = "explicit apply"
-version_policy = "channels preferred"
-host_variation = "host detection"
+mutation_boundary = "explicit apply; agent executes approved setup recipes"
+version_policy = "stable tools; latest AI CLIs; locked editor plugins"
+host_variation = "host detection and untracked local overrides"
 
 [package_managers.apt]
 command = "apt"
@@ -14,106 +15,453 @@ platforms = ["Linux"]
 
 [package_managers.brew]
 command = "brew"
-platforms = ["Darwin", "Linux"]
+platforms = ["Darwin"]
+setup = { Darwin = [
+  "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"",
+] }
+verify = ["brew --version"]
+docs = "https://brew.sh/"
+notes = "Bootstrap Homebrew before its package recipes; follow the installer's shellenv instructions."
 
-[package_managers.bun]
-command = "bun"
-platforms = ["Darwin", "Linux"]
+# Entries are ordered: execute only approved, missing required setup steps.
+# setup/verify are display-only shell instructions, never executed by cli.py.
 
-[package_managers.go]
-command = "go"
-platforms = ["Darwin", "Linux"]
+[[tools]]
+id = "python"
+command = "python3"
+channel = "stable"
+required = true
+min_version = "3.11"
+version_args = ["--version"]
+verify = ["python3 --version"]
+setup = { Linux = [
+  "sudo apt update",
+  "sudo apt install python3",
+], Darwin = [
+  "brew install python",
+] }
 
 [[tools]]
 id = "git"
 command = "git"
 channel = "stable"
 required = true
-packages = { apt = "git", brew = "git" }
+verify = ["git --version"]
+setup = { Linux = [
+  "sudo apt install git",
+], Darwin = [
+  "brew install git",
+] }
 
 [[tools]]
 id = "curl"
 command = "curl"
 channel = "stable"
 required = true
-packages = { apt = "curl", brew = "curl" }
+verify = ["curl --version"]
+setup = { Linux = [
+  "sudo apt install curl ca-certificates",
+], Darwin = [
+  "brew install curl",
+] }
 
 [[tools]]
 id = "zsh"
 command = "zsh"
 channel = "stable"
 required = true
-packages = { apt = "zsh", brew = "zsh" }
+verify = ["zsh --version"]
+setup = { Linux = [
+  "sudo apt install zsh",
+], Darwin = [
+  "brew install zsh",
+] }
 
 [[tools]]
 id = "tmux"
 command = "tmux"
 channel = "stable"
 required = true
-packages = { apt = "tmux", brew = "tmux" }
+min_version = "3.2"
+version_args = ["-V"]
+verify = ["tmux -V"]
+setup = { Linux = [
+  "sudo apt install tmux",
+], Darwin = [
+  "brew install tmux",
+] }
+
+[[tools]]
+id = "compiler"
+command = "cc"
+channel = "stable"
+required = true
+notes = "macOS developer tools installation may require a GUI confirmation; verify before continuing."
+verify = ["cc --version"]
+setup = { Linux = [
+  "sudo apt install build-essential",
+], Darwin = [
+  "xcode-select --install",
+] }
+
+[[tools]]
+id = "make"
+command = "make"
+channel = "stable"
+required = true
+verify = ["make --version"]
+setup = { Linux = [
+  "sudo apt install build-essential",
+], Darwin = [
+  "xcode-select --install",
+] }
+
+[[tools]]
+id = "unzip"
+command = "unzip"
+channel = "stable"
+required = true
+verify = ["unzip -v"]
+setup = { Linux = [
+  "sudo apt install unzip",
+], Darwin = [
+  "brew install unzip",
+] }
 
 [[tools]]
 id = "neovim"
 command = "nvim"
 channel = "stable"
 required = true
-packages = { apt = "neovim", brew = "neovim" }
+min_version = "0.11"
+version_args = ["--version"]
+docs = "https://github.com/neovim/neovim/blob/master/INSTALL.md"
+notes = "Ubuntu 24.04 apt neovim is too old for AstroNvim v6. Use a stable upstream release; never overwrite an existing local install without reviewing a backup."
+verify = ["nvim --version"]
+setup = { Linux = [
+  '''
+set -eu
+case "$(uname -m)" in x86_64) nvim_arch=x86_64 ;; aarch64|arm64) nvim_arch=arm64 ;; *) echo "Unsupported Neovim architecture" >&2; exit 1 ;; esac
+nvim_tmp="$(mktemp -d)"
+curl -fL "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${nvim_arch}.tar.gz" -o "$nvim_tmp/nvim.tar.gz"
+mkdir -p "$HOME/.local/opt" "$HOME/.local/bin"
+# Refuse to replace an existing install; review and back it up first.
+test ! -e "$HOME/.local/opt/nvim-linux-${nvim_arch}"
+test ! -e "$HOME/.local/bin/nvim" && test ! -L "$HOME/.local/bin/nvim"
+tar -xzf "$nvim_tmp/nvim.tar.gz" -C "$HOME/.local/opt"
+ln -s "$HOME/.local/opt/nvim-linux-${nvim_arch}/bin/nvim" "$HOME/.local/bin/nvim"
+rm -rf "$nvim_tmp"
+''',
+], Darwin = [
+  "brew install neovim",
+] }
 
 [[tools]]
 id = "go"
 command = "go"
 channel = "stable"
 required = true
-packages = { apt = "golang-go", brew = "go" }
+verify = ["go version"]
+setup = { Linux = [
+  "sudo apt install golang-go",
+], Darwin = [
+  "brew install go",
+] }
 
 [[tools]]
 id = "uv"
 command = "uv"
 channel = "stable"
 required = true
-packages = { brew = "uv" }
+docs = "https://docs.astral.sh/uv/getting-started/installation/"
+verify = ["uv --version"]
+setup = { Linux = [
+  "curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh",
+], Darwin = [
+  "curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh",
+] }
 
 [[tools]]
 id = "bun"
 command = "bun"
 channel = "stable"
 required = true
-packages = { brew = "oven-sh/bun/bun" }
+docs = "https://bun.com/docs/installation"
+notes = "The installer may append PATH lines to shell files; inspect them before config apply."
+verify = ["bun --version"]
+setup = { Linux = [
+  "curl -fsSL https://bun.com/install | bash",
+], Darwin = [
+  "curl -fsSL https://bun.com/install | bash",
+] }
+
+[[tools]]
+id = "node"
+command = "node"
+channel = "lts"
+required = true
+min_version = "22"
+version_args = ["--version"]
+docs = "https://github.com/nvm-sh/nvm#installing-and-updating"
+notes = "Run the recipe in bash or zsh. Reload the login shell to make the default Node visible to agents."
+verify = ["node --version"]
+setup = { Linux = [
+  "mkdir -p \"$HOME/.nvm\"",
+  "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | env PROFILE=/dev/null NVM_DIR=\"$HOME/.nvm\" bash",
+  "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm install --lts; nvm alias default \"lts/*\"; nvm use default",
+], Darwin = [
+  "mkdir -p \"$HOME/.nvm\"",
+  "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | env PROFILE=/dev/null NVM_DIR=\"$HOME/.nvm\" bash",
+  "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm install --lts; nvm alias default \"lts/*\"; nvm use default",
+] }
+
+[[tools]]
+id = "npm"
+command = "npm"
+channel = "bundled with node"
+required = true
+notes = "npm is installed with Node; do not install the older distro Node/npm packages."
+verify = ["npm --version"]
+setup = { Linux = [
+  "mkdir -p \"$HOME/.nvm\"",
+  "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | env PROFILE=/dev/null NVM_DIR=\"$HOME/.nvm\" bash",
+  "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm install --lts; nvm alias default \"lts/*\"; nvm use default",
+], Darwin = [
+  "mkdir -p \"$HOME/.nvm\"",
+  "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | env PROFILE=/dev/null NVM_DIR=\"$HOME/.nvm\" bash",
+  "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm install --lts; nvm alias default \"lts/*\"; nvm use default",
+] }
 
 [[tools]]
 id = "pre-commit"
 command = "pre-commit"
 channel = "stable"
 required = true
-packages = { brew = "pre-commit" }
+docs = "https://pre-commit.com/#installation"
+verify = ["pre-commit --version"]
+setup = { Linux = [
+  "uv tool install pre-commit",
+], Darwin = [
+  "uv tool install pre-commit",
+] }
 
 [[tools]]
 id = "git-delta"
 command = "delta"
 channel = "stable"
 required = true
-packages = { apt = "git-delta", brew = "git-delta" }
+verify = ["delta --version"]
+setup = { Linux = [
+  "sudo apt install git-delta",
+], Darwin = [
+  "brew install git-delta",
+] }
+
+[[tools]]
+id = "ripgrep"
+command = "rg"
+channel = "stable"
+required = true
+verify = ["rg --version"]
+setup = { Linux = [
+  "sudo apt install ripgrep",
+], Darwin = [
+  "brew install ripgrep",
+] }
+
+[[tools]]
+id = "fd"
+command = "fd"
+channel = "stable"
+required = true
+alternatives = ["fdfind"]
+verify = ["command -v fd || command -v fdfind"]
+setup = { Linux = [
+  "sudo apt install fd-find",
+], Darwin = [
+  "brew install fd",
+] }
 
 [[tools]]
 id = "codex"
 command = "codex"
 channel = "latest"
 required = true
-packages = { bun = "@openai/codex" }
+docs = "https://learn.chatgpt.com/docs/config-file/environment-variables"
+notes = "Native user-local installation; preserve ~/.codex. Authentication is separate: codex login --device-auth on a headless host."
+verify = ["codex --version"]
+setup = { Linux = [
+  "curl -fsSL https://chatgpt.com/codex/install.sh | env CODEX_NON_INTERACTIVE=1 sh",
+], Darwin = [
+  "curl -fsSL https://chatgpt.com/codex/install.sh | env CODEX_NON_INTERACTIVE=1 sh",
+] }
+
+[[tools]]
+id = "claude"
+command = "claude"
+channel = "latest"
+required = true
+min_version = "2.1.277"
+version_args = ["--version"]
+docs = "https://code.claude.com/docs/en/setup"
+notes = "Native user-local installation; preserve ~/.claude and ~/.claude.json. Run claude interactively for authentication."
+verify = ["claude --version", "claude doctor"]
+setup = { Linux = [
+  "curl -fsSL https://claude.ai/install.sh | bash -s latest",
+], Darwin = [
+  "curl -fsSL https://claude.ai/install.sh | bash -s latest",
+] }
 
 [[tools]]
 id = "gmailctl"
 command = "gmailctl"
 channel = "latest"
 required = false
-packages = { go = "github.com/mbrt/gmailctl/cmd/gmailctl@latest" }
+verify = ["gmailctl version"]
+setup = { Linux = [
+  "go install github.com/mbrt/gmailctl/cmd/gmailctl@latest",
+], Darwin = [
+  "go install github.com/mbrt/gmailctl/cmd/gmailctl@latest",
+] }
 
 [[tools]]
 id = "cloudflared"
 command = "cloudflared"
 channel = "stable"
 required = false
-packages = { brew = "cloudflared" }
+docs = "https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/"
+notes = "Optional; follow upstream Linux package instructions if selected."
+verify = ["cloudflared --version"]
+setup = { Linux = [
+], Darwin = [
+  "brew install cloudflared",
+] }
+
+[[prerequisites]]
+id = "oh-my-zsh"
+path = "~/.oh-my-zsh/oh-my-zsh.sh"
+kind = "file"
+group = "core"
+required = true
+phase = "before-apply"
+setup = { Linux = [
+  "git clone --depth 1 https://github.com/ohmyzsh/ohmyzsh.git \"$HOME/.oh-my-zsh\"",
+], Darwin = [
+  "git clone --depth 1 https://github.com/ohmyzsh/ohmyzsh.git \"$HOME/.oh-my-zsh\"",
+] }
+verify = ["test -f \"$HOME/.oh-my-zsh/oh-my-zsh.sh\""]
+docs = "https://github.com/ohmyzsh/ohmyzsh"
+
+[[prerequisites]]
+id = "nvm"
+path = "~/.nvm/nvm.sh"
+kind = "file"
+group = "core"
+required = true
+phase = "before-apply"
+setup = { Linux = [
+  "mkdir -p \"$HOME/.nvm\"",
+  "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | env PROFILE=/dev/null NVM_DIR=\"$HOME/.nvm\" bash",
+  "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm install --lts; nvm alias default \"lts/*\"; nvm use default",
+], Darwin = [
+  "mkdir -p \"$HOME/.nvm\"",
+  "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | env PROFILE=/dev/null NVM_DIR=\"$HOME/.nvm\" bash",
+  "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm install --lts; nvm alias default \"lts/*\"; nvm use default",
+] }
+verify = ["test -s \"$HOME/.nvm/nvm.sh\""]
+docs = "https://github.com/nvm-sh/nvm"
+
+[[prerequisites]]
+id = "tpm"
+path = "~/.tmux/plugins/tpm/tpm"
+kind = "file"
+group = "core"
+required = true
+phase = "before-apply"
+setup = { Linux = [
+  "git clone --depth 1 https://github.com/tmux-plugins/tpm \"$HOME/.tmux/plugins/tpm\"",
+], Darwin = [
+  "git clone --depth 1 https://github.com/tmux-plugins/tpm \"$HOME/.tmux/plugins/tpm\"",
+] }
+verify = ["test -x \"$HOME/.tmux/plugins/tpm/tpm\""]
+docs = "https://github.com/tmux-plugins/tpm"
+
+[[prerequisites]]
+id = "catppuccin"
+path = "~/.config/tmux/plugins/catppuccin/tmux/catppuccin.tmux"
+kind = "file"
+group = "core"
+required = true
+phase = "before-apply"
+setup = { Linux = [
+  "mkdir -p \"$HOME/.config/tmux/plugins/catppuccin\"",
+  "git clone --depth 1 --branch v2.3.1 https://github.com/catppuccin/tmux.git \"$HOME/.config/tmux/plugins/catppuccin/tmux\"",
+], Darwin = [
+  "mkdir -p \"$HOME/.config/tmux/plugins/catppuccin\"",
+  "git clone --depth 1 --branch v2.3.1 https://github.com/catppuccin/tmux.git \"$HOME/.config/tmux/plugins/catppuccin/tmux\"",
+] }
+verify = ["test -f \"$HOME/.config/tmux/plugins/catppuccin/tmux/catppuccin.tmux\""]
+docs = "https://github.com/catppuccin/tmux#installation"
+notes = "Pinned theme installed manually; TPM manages the other tmux plugins."
+
+[[prerequisites]]
+id = "tmux-cpu"
+path = "~/.tmux/plugins/tmux-cpu/cpu.tmux"
+kind = "file"
+group = "core"
+required = true
+phase = "after-apply"
+setup = { Linux = [
+  '''
+set -eu
+tmux_setup_dir="$(mktemp -d)"
+trap 'tmux -S "$tmux_setup_dir/socket" kill-server 2>/dev/null || true; rm -rf "$tmux_setup_dir"' EXIT
+tmux -S "$tmux_setup_dir/socket" -f "$HOME/.config/tmux/tmux.conf" new-session -d -s setup
+TMUX="$tmux_setup_dir/socket,0,0" "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+''',
+], Darwin = [
+  '''
+set -eu
+tmux_setup_dir="$(mktemp -d)"
+trap 'tmux -S "$tmux_setup_dir/socket" kill-server 2>/dev/null || true; rm -rf "$tmux_setup_dir"' EXIT
+tmux -S "$tmux_setup_dir/socket" -f "$HOME/.config/tmux/tmux.conf" new-session -d -s setup
+TMUX="$tmux_setup_dir/socket,0,0" "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+''',
+] }
+verify = ["test -f \"$HOME/.tmux/plugins/tmux-cpu/cpu.tmux\""]
+notes = "Run against the managed configuration in a new isolated tmux server; do not reload existing user sessions without approval."
+
+[[prerequisites]]
+id = "lazy-nvim"
+path = "~/.local/share/nvim/lazy/lazy.nvim/lua/lazy/init.lua"
+kind = "file"
+group = "core"
+required = true
+phase = "after-apply"
+setup = { Linux = [
+  "nvim --headless '+Lazy! restore' +qa",
+], Darwin = [
+  "nvim --headless '+Lazy! restore' +qa",
+] }
+verify = ["test -f \"$HOME/.local/share/nvim/lazy/lazy.nvim/lua/lazy/init.lua\""]
+docs = "https://lazy.folke.io/usage"
+notes = "Restore the committed plugin lock; do not run Lazy update during routine setup."
+
+[[prerequisites]]
+id = "astronvim"
+path = "~/.local/share/nvim/lazy/AstroNvim/lua/astronvim/init.lua"
+kind = "file"
+group = "core"
+required = true
+phase = "after-apply"
+setup = { Linux = [
+  "nvim --headless '+Lazy! restore' +qa",
+], Darwin = [
+  "nvim --headless '+Lazy! restore' +qa",
+] }
+verify = ["nvim --headless '+lua assert(require(\"lazy.core.config\").plugins.AstroNvim)' +qa"]
+docs = "https://docs.astronvim.com/"
+notes = "After restore, run :checkhealth and verify Mason installs pyright, lua_ls, ruff, stylua, debugpy and tree-sitter-cli. Nerd Fonts belong on the terminal client, including for SSH."
 
 [[configs]]
 id = "gitconfig"
@@ -135,6 +483,17 @@ required = true
 private = false
 group = "core"
 tool = "git"
+origin = "custom"
+
+[[configs]]
+id = "zshenv"
+kind = "file"
+source = "zsh/.zshenv"
+target = "~/.zshenv"
+required = true
+private = false
+group = "core"
+tool = "zsh"
 origin = "custom"
 
 [[configs]]
@@ -189,7 +548,7 @@ target = "~/.config/nvim/.neoconf.json"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -200,7 +559,7 @@ target = "~/.config/nvim/.stylua.toml"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -211,7 +570,7 @@ target = "~/.config/nvim/init.lua"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "scaffold"
 
 [[configs]]
@@ -222,7 +581,7 @@ target = "~/.config/nvim/lazy-lock.json"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "lock"
 
 [[configs]]
@@ -233,7 +592,7 @@ target = "~/.config/nvim/lua/lazy_setup.lua"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "scaffold"
 
 [[configs]]
@@ -244,7 +603,7 @@ target = "~/.config/nvim/lua/plugins/copilot-chat.lua"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -255,7 +614,7 @@ target = "~/.config/nvim/lua/plugins/copilot.lua"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -266,7 +625,7 @@ target = "~/.config/nvim/lua/plugins/markdown-preview.lua"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -277,7 +636,7 @@ target = "~/.config/nvim/lua/plugins/mason.lua"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -288,7 +647,7 @@ target = "~/.config/nvim/lua/plugins/none-ls.lua"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -299,7 +658,7 @@ target = "~/.config/nvim/lua/plugins/rainbow-csv.lua"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -310,7 +669,7 @@ target = "~/.config/nvim/neovim.yml"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
@@ -321,7 +680,7 @@ target = "~/.config/nvim/selene.toml"
 required = true
 private = false
 group = "core"
-tool = "nvim"
+tool = "neovim"
 origin = "custom"
 
 [[configs]]
