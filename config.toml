@@ -289,6 +289,9 @@ command = "fd"
 channel = "stable"
 required = true
 alternatives = ["fdfind"]
+min_version = "8.4"
+version_args = ["--version"]
+notes = "AstroNvim's Snacks file explorer requires fd 8.4 or newer."
 verify = ["command -v fd || command -v fdfind"]
 setup = { Linux = [
   "sudo apt install fd-find",
