@@ -101,6 +101,8 @@ home; `--home` does not rewrite printed shell instructions into sandbox commands
 Before replacing an existing shell or Git config, review its drift and retain
 host-specific changes in untracked home files:
 
+- `~/.zshenv.local` loads in every zsh session. Keep it silent and limited to
+  environment settings such as host-specific cache paths.
 - `~/.zshrc.local` loads last in interactive shells. Put private connection
   helpers, environment hooks, CUDA/project choices, and optional integration
   settings here. Keep secrets out of the repository; the legacy
@@ -111,7 +113,7 @@ host-specific changes in untracked home files:
   settings from the existing config before apply; a backup alone does not keep
   them active. Shared defaults do not force signed commits.
 
-Neither override is created or replaced by apply. Do not copy an entire host
+These overrides are not created or replaced by apply. Do not copy an entire host
 configuration into the public repository. Existing SSH, Gmail, and iTerm2 groups
 remain private and opt-in; inspect them before selecting them.
 
