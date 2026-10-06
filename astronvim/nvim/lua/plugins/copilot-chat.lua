@@ -2,6 +2,7 @@
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    enabled = vim.env.STMHARRY_NVIM_COPILOT == "1",
     opts = {
       file_types = { "markdown", "copilot-chat" },
     },
@@ -9,6 +10,7 @@ return {
   },
   {
     "CopilotC-Nvim/CopilotChat.nvim",
+    enabled = vim.env.STMHARRY_NVIM_COPILOT == "1",
     cmd = { "CopilotChat" },
     dependencies = {
       { "zbirenbaum/copilot.lua" },

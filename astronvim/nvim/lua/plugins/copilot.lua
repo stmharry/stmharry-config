@@ -1,10 +1,10 @@
 ---@type LazySpec
 return {
   "zbirenbaum/copilot.lua",
+  enabled = vim.env.STMHARRY_NVIM_COPILOT == "1",
   cmd = "Copilot",
   event = "InsertEnter",
   init = function() vim.g.copilot_filetypes = { markdown = true } end,
-  build = ":Copilot auth",
   opts = {
     panel = {
       enabled = true,
@@ -46,7 +46,7 @@ return {
       cvs = false,
       ["."] = false,
     },
-    copilot_node_command = "node", -- Node.js version must be > 16.x
+    copilot_node_command = "node", -- Use the declared Node LTS runtime.
     server_opts_overrides = {},
   },
 }

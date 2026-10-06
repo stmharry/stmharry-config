@@ -22,7 +22,6 @@
 
 [commit]
 	template = ~/.gitmessage.txt
-	gpgsign = true
 
 [alias]
 	a = add
@@ -95,3 +94,7 @@
 		bold blue => syntax "#384361", \
 		bold cyan => syntax "#384d5d", \
 		bold yellow => syntax "#544f4e"
+
+# Host-specific identity, signing, credentials, and includes override defaults.
+[include]
+	path = ~/.gitconfig.local
