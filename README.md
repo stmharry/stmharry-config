@@ -129,6 +129,14 @@ loading plugins or emitting output. Login shells initialize Homebrew and nvm;
 interactive shells load optional integrations only when present. Source nvm
 explicitly when an agent needs Node in a non-login shell.
 
+## Remote Terminals
+
+For roaming remote terminals, select the optional Mosh recipe from `plan` on
+both the terminal client and the host, then connect with `mosh <ssh-alias>`.
+Mosh uses SSH authentication to start its server and then needs UDP connectivity
+on ports 60000–61000. Check reachability over the intended private network before
+changing firewall rules. See [Mosh usage](https://mosh.org/#usage).
+
 ## Plugin Bootstrap
 
 Restore the committed AstroNvim v6 plugin versions:

@@ -92,6 +92,20 @@ setup = { Linux = [
 ] }
 
 [[tools]]
+id = "mosh"
+command = "mosh"
+channel = "stable"
+required = false
+docs = "https://mosh.org/"
+notes = "Optional remote terminal transport; install on both client and server. Uses existing SSH authentication, then UDP 60000-61000. Check network reachability separately; do not open a public firewall automatically."
+verify = ["mosh --version", "mosh-server --version"]
+setup = { Linux = [
+  "sudo apt install mosh",
+], Darwin = [
+  "brew install mosh",
+] }
+
+[[tools]]
 id = "compiler"
 command = "cc"
 channel = "stable"
